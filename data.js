@@ -18,7 +18,10 @@ window.SITE = {
     },
     // Put your real photo here: assets/profile.jpg (or .png)
     // Then update profileImage to "./assets/profile.jpg"
-    profileImage: "./assets/profile-placeholder.svg",
+    // profileImage: "./assets/profile-placeholder.svg",
+    stanchatman-profilepic.jpg
+    
+    profileImage: "./assets/stanchatman-profilepic.jpg",
     topSkills: ["Generative AI", "Product Strategy", "Agile/Scrum", "Change Management", "AI Governance"]
   },
 
