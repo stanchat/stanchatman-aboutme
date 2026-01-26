@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Stanley Chatman — Portfolio</title>
+  <meta name="description" content="Technology Leader | Founder, CommunityInsight.AI | AI Solutions Architect | AI Enablement Coach" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <header class="topbar" id="top">
+    <div class="container topbar__inner">
+      <a class="brand" href="#top" aria-label="Go to top">
+        <span class="brand__dot"></span>
+        <span class="brand__text">Stanley Chatman</span>
+      </a>
+
+      <nav class="nav" aria-label="Primary">
+        <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu">
+          <span class="nav__toggleLines" aria-hidden="true"></span>
+          <span class="sr-only">Toggle menu</span>
+        </button>
+
+        <ul class="nav__menu" id="navMenu">
+          <li><a class="nav__link" href="#home">Home</a></li>
+          <li><a class="nav__link" href="#about">About</a></li>
+          <li><a class="nav__link" href="#experience">Experience</a></li>
+          <li><a class="nav__link" href="#projects">Projects</a></li>
+          <li class="nav__cta">
+            <a class="btn btn--ghost" href="https://www.linkedin.com/in/stanchatman/" target="_blank" rel="noreferrer">LinkedIn</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO / HOME -->
+    <section class="section hero" id="home">
+      <div class="container hero__grid">
+        <div class="hero__left">
+          <p class="kicker">AI • Agile • Product/Program Leadership</p>
+          <h1 class="hero__title" id="headline"></h1>
+          <p class="hero__subtitle" id="summaryBlurb"></p>
+
+          <div class="hero__buttons">
+            <a class="btn btn--primary" href="#projects">View Projects</a>
+            <a class="btn btn--ghost" id="resumeLink" href="#" target="_blank" rel="noreferrer">Download Resume</a>
+          </div>
+
+          <div class="stats" id="stats"></div>
+
+          <div class="hero__links">
+            <a class="chip" id="linkLinkedIn" href="#" target="_blank" rel="noreferrer">LinkedIn</a>
+            <a class="chip" id="linkAboutMe" href="#" target="_blank" rel="noreferrer">About.me</a>
+            <a class="chip" id="linkGitHub" href="#" target="_blank" rel="noreferrer">GitHub</a>
+            <a class="chip" id="linkEmail" href="#" rel="noreferrer">Email</a>
+          </div>
+        </div>
+
+        <aside class="hero__right">
+          <div class="profileCard">
+            <div class="profileCard__imgWrap">
+              <img id="profileImg" class="profileCard__img" src="./assets/profile-placeholder.svg" alt="Profile photo" loading="lazy" />
+            </div>
+            <div class="profileCard__meta">
+              <div class="profileCard__name">Stanley Chatman</div>
+              <div class="profileCard__loc" id="location"></div>
+              <div class="profileCard__tags" id="topSkills"></div>
+            </div>
+          </div>
+
+          <div class="callout">
+            <div class="callout__title">Now</div>
+            <div class="callout__body" id="nowLine"></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="section" id="about">
+      <div class="container">
+        <div class="sectionHeader">
+          <h2>About</h2>
+          <p>What I build, how I lead, and what I care about.</p>
+        </div>
+
+        <div class="grid2">
+          <div class="card">
+            <h3>Summary</h3>
+            <p id="aboutSummary"></p>
+            <div class="divider"></div>
+            <h4>Focus areas</h4>
+            <ul class="bullets" id="focusAreas"></ul>
+          </div>
+
+          <div class="card">
+            <h3>Volunteering</h3>
+            <div class="timeline" id="volunteering"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section class="section" id="experience">
+      <div class="container">
+        <div class="sectionHeader">
+          <h2>Experience</h2>
+          <p>Highlights across product, program, architecture, and enablement.</p>
+        </div>
+
+        <div class="timeline timeline--wide" id="experienceTimeline"></div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section class="section" id="projects">
+      <div class="container">
+        <div class="sectionHeader">
+          <h2>Projects</h2>
+          <p>Selected projects plus writing and certifications.</p>
+        </div>
+
+        <div class="tabs" role="tablist" aria-label="Projects tabs">
+          <button class="tab is-active" role="tab" aria-selected="true" aria-controls="panel-projects" id="tab-projects">Projects</button>
+          <button class="tab" role="tab" aria-selected="false" aria-controls="panel-writing" id="tab-writing">Writing</button>
+          <button class="tab" role="tab" aria-selected="false" aria-controls="panel-certs" id="tab-certs">Certifications</button>
+        </div>
+
+        <div class="tabPanels">
+          <section class="tabPanel is-active" role="tabpanel" id="panel-projects" aria-labelledby="tab-projects">
+            <div class="cardsGrid" id="projectsGrid"></div>
+          </section>
+
+          <section class="tabPanel" role="tabpanel" id="panel-writing" aria-labelledby="tab-writing">
+            <div class="grid2">
+              <div class="card">
+                <h3>Medium</h3>
+                <div class="list" id="mediumList"></div>
+              </div>
+              <div class="card">
+                <h3>Scrum.org Blog</h3>
+                <div class="list" id="scrumBlogList"></div>
+              </div>
+            </div>
+
+            <div class="card" style="margin-top:16px;">
+              <h3>Other Writing</h3>
+              <div class="list" id="otherWriting"></div>
+            </div>
+          </section>
+
+          <section class="tabPanel" role="tabpanel" id="panel-certs" aria-labelledby="tab-certs">
+            <div class="card">
+              <h3>Licenses & Certifications</h3>
+              <div class="certGrid" id="certsGrid"></div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="container footer__inner">
+        <div class="footer__left">
+          <div class="footer__brand">
+            <span class="brand__dot"></span>
+            <span>Stanley Chatman</span>
+          </div>
+          <p class="muted">Deep charcoal, minimal neon. Static site. Easy to update.</p>
+        </div>
+
+        <div class="footer__right">
+          <a class="mutedLink" href="#top">Back to top</a>
+          <a class="mutedLink" id="footerEmail" href="#">Email</a>
+          <a class="mutedLink" href="https://github.com/stanchat" target="_blank" rel="noreferrer">GitHub</a>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <script src="./data.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>
