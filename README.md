@@ -1,5 +1,8 @@
 # Stanley Chatman — Dark Mode Portfolio (GitHub Pages)
 
+
+Live Site: https://stanchat.github.io/stanchatman-aboutme/
+
 This is a static personal site (HTML/CSS/JS) designed to look custom-coded, run fast, and be easy to update.
 
 ## Quick start (local)
