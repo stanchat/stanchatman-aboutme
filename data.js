@@ -65,8 +65,8 @@ window.SITE = {
       location: "United States",
       bullets: [
         "Leading enterprise-scale GenAI enablement programs spanning training, operating models, governance, and adoption measurement",
-        "Partnering with product, engineering, and business leaders to move pilots into durable production workflows",
-        "Designing repeatable AI delivery playbooks across multiple client engagements"
+        "Partnering with engineering, product, and business leaders to convert pilots into durable production workflows",
+        "Designing repeatable AI delivery playbooks across multi-client portfolios"
       ],
       links: []
     },
@@ -86,13 +86,13 @@ window.SITE = {
 
     {
       company: "Avanade",
-      title: "Senior Group Manager / Global Agile Lead",
+      title: "Senior Group Manager / Global Agile Lead / Agile Coach",
       dates: "Sep 2007 – Jan 2021",
       location: "Greater Chicago Area",
       bullets: [
-        "Directed global Agile transformation programs supporting 2,200+ practitioners",
-        "Built training academies, certification pipelines, and executive coaching models",
-        "Delivered enterprise platform and modernization programs across industries"
+        "Led global Agile transformation programs enabling 2,200+ practitioners",
+        "Built certification academies, training pipelines, and executive coaching programs",
+        "Delivered enterprise modernization programs across regulated industries"
       ],
       links: []
     },
@@ -103,8 +103,8 @@ window.SITE = {
       dates: "Jul 2025 – Present",
       location: "Chicago Area",
       bullets: [
-        "Teach AI and computer science courses with applied labs and enterprise-focused case studies",
-        "Mentor students on cloud, data, and AI career pathways"
+        "Teach AI and computer science with applied labs and real-world enterprise scenarios",
+        "Mentor students on cloud, data, and GenAI career pathways"
       ],
       links: []
     },
@@ -153,8 +153,26 @@ window.SITE = {
     medium: [
       {
         title:
+          "When One Prompt Becomes a Song: How Copilot Outperformed Every Other AI Tool",
+        date: "Jan 2026",
+        url: "https://medium.com/@stanchatman"
+      },
+      {
+        title:
+          "From Gas Pumps to Code Blocks: How Self-Service Innovations Shape Our Digital Future",
+        date: "Jan 2026",
+        url: "https://medium.com/@stanchatman"
+      },
+      {
+        title:
           "Most GenAI Pilots Fail. Here’s the Manifesto for the 5% That Don’t.",
         date: "Jan 2026",
+        url: "https://medium.com/@stanchatman"
+      },
+      {
+        title:
+          "The Missing Role in Microsoft’s AI Strategy: Copilot Enablement, Not Just Copilot Sales",
+        date: "Dec 2025",
         url: "https://medium.com/@stanchatman"
       },
       {
@@ -162,17 +180,57 @@ window.SITE = {
           "The Overlooked Role That Can Make or Break AI Adoption: The AI Enablement Coach",
         date: "Oct 2025",
         url: "https://medium.com/@stanchatman"
+      },
+      {
+        title:
+          "Engineering LLMs in the Microsoft Ecosystem: Tips, Tricks, and Lessons Learned",
+        date: "Aug 2025",
+        url: "https://medium.com/@stanchatman"
+      },
+      {
+        title:
+          "Microsoft’s Mobile Misstep: A Hidden Obstacle in the Race for Generative AI Supremacy",
+        date: "May 2025",
+        url: "https://medium.com/@stanchatman"
+      },
+      {
+        title:
+          "From Chaos to Confidence: Why I Built the AI Engagement Accelerator Kit",
+        date: "Apr 2025",
+        url: "https://medium.com/@stanchatman"
       }
     ],
+
     scrumOrg: [
+      {
+        title:
+          "Using APOM (Agile Product Operating Model) to Fix Microsoft’s Copilot Adoption Problem",
+        date: "Dec 2025",
+        url: "https://www.scrum.org/resources/blog"
+      },
       {
         title:
           "AI Enablement Coach: The Missing Link Between Agile Delivery and AI Adoption",
         date: "Oct 2025",
         url: "https://www.scrum.org/resources/blog"
+      },
+      {
+        title:
+          "From Chaos to Confidence: Why I Built the AI Engagement Accelerator Kit",
+        date: "Apr 2025",
+        url: "https://www.scrum.org/resources/blog"
       }
     ],
-    other: []
+
+    other: [
+      {
+        title:
+          "From Chaos to Confidence: Why I Built the AI Engagement Accelerator Kit",
+        meta: "Dev.to",
+        url:
+          "https://dev.to/stanchat/from-chaos-to-confidence-why-i-built-the-ai-engagement-accelerator-kit-i6n"
+      }
+    ]
   },
 
   certifications: [
@@ -183,15 +241,63 @@ window.SITE = {
       expires: "Jul 2026"
     },
     {
+      name: "MLOps Certification Course",
+      issuer: "Edureka",
+      issued: "Jul 2025",
+      expires: ""
+    },
+    {
+      name: "MCP Fundamentals for Building AI Agents",
+      issuer: "Educative",
+      issued: "Jun 2025",
+      expires: ""
+    },
+    {
+      name: "Master GitHub Copilot",
+      issuer: "Educative",
+      issued: "Jun 2025",
+      expires: ""
+    },
+    {
       name: "Professional Scrum Facilitation Skills™",
       issuer: "Scrum.org",
       issued: "Jun 2025",
       expires: ""
     },
     {
+      name: "Python Programming Expert",
+      issuer: "Edureka",
+      issued: "Jun 2025",
+      expires: ""
+    },
+    {
+      name: "AI x Design Thinking Workshop Series",
+      issuer: "IDEO U",
+      issued: "Apr 2025",
+      expires: ""
+    },
+    {
+      name: "AI Solutions Architect",
+      issuer: "ELVTR",
+      issued: "Mar 2025",
+      expires: ""
+    },
+    {
+      name: "Academy Accreditation - Generative AI Fundamentals",
+      issuer: "Databricks",
+      issued: "Jul 2024",
+      expires: "Jul 2026"
+    },
+    {
       name: "Microsoft Certified: Azure AI Fundamentals",
       issuer: "Microsoft",
       issued: "Feb 2023",
+      expires: ""
+    },
+    {
+      name: "Professional Scrum Trainer™ (PST)",
+      issuer: "Scrum.org",
+      issued: "Oct 2013",
       expires: ""
     }
   ]
