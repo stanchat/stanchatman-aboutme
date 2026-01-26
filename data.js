@@ -241,6 +241,15 @@ window.SITE = {
 
   certifications: [
     {
+      name: "Post Graduate Program in Generative AI and Machine Learning",
+      issuer: "Edureka + Illinois Institute of Technology",
+      issued: "Dec 2025",
+      expires: "",
+      notes:
+        "8-month executive program covering Python for AI, applied ML, deep learning, LLMs, RAG, LangChain/LlamaIndex, vector databases, cloud GenAI, and capstone projects"
+    },
+
+    {
       name: "Certified SAFe® 6 Agilist",
       issuer: "Scaled Agile, Inc.",
       issued: "Jul 2025",
