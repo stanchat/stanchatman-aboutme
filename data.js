@@ -127,6 +127,23 @@ window.SITE = {
 
   projects: [
     {
+      name: "AI Enablement Manifesto",
+      period: "Jan 2026 – Present",
+      description:
+        "A practical operating model for turning GenAI investments into sustained adoption — covering enablement, workflow integration, governance guardrails, and measurable outcomes. Includes playbooks, templates, and an AI Enablement Coach concept.",
+      tags: ["AI Enablement", "GenAI Adoption", "Operating Model", "Governance"],
+      links: [
+        { label: "Website", url: "https://aienablementmanifesto.com/" },
+        { label: "Medium", url: "https://medium.com/@stanchatman" },
+        {
+          label: "Scrum.org Blogs",
+          url:
+            "https://www.scrum.org/resources/blog?uid=118&resource_tags=All&node_content_language=All"
+        }
+      ]
+    },
+
+    {
       name: "AI Engagement Accelerator Kit (Open Source)",
       period: "Ongoing",
       description:
@@ -139,6 +156,7 @@ window.SITE = {
         }
       ]
     },
+
     {
       name: "Enterprise GenAI Advisor Platform",
       period: "2023–2024",
@@ -203,22 +221,10 @@ window.SITE = {
 
     scrumOrg: [
       {
-        title:
-          "Using APOM (Agile Product Operating Model) to Fix Microsoft’s Copilot Adoption Problem",
-        date: "Dec 2025",
-        url: "https://www.scrum.org/resources/blog"
-      },
-      {
-        title:
-          "AI Enablement Coach: The Missing Link Between Agile Delivery and AI Adoption",
-        date: "Oct 2025",
-        url: "https://www.scrum.org/resources/blog"
-      },
-      {
-        title:
-          "From Chaos to Confidence: Why I Built the AI Engagement Accelerator Kit",
-        date: "Apr 2025",
-        url: "https://www.scrum.org/resources/blog"
+        title: "Stanley Chatman — Scrum.org Blog Archive",
+        date: "",
+        url:
+          "https://www.scrum.org/resources/blog?uid=118&resource_tags=All&node_content_language=All"
       }
     ],
 
