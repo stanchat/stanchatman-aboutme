@@ -2,7 +2,7 @@ window.SITE = {
   person: {
     name: "Stanley Chatman",
     headline:
-      "AI Enablement Leader @ Deloitte | Principal Technical Program Manager | GenAI Adoption & Operating Models | Enterprise Delivery",
+      "AI Enablement Leader | Principal Technical Program Manager | GenAI Adoption & Operating Models | Enterprise Delivery",
     location: "Chicago Area",
     summaryBlurb:
       "I lead enterprise AI enablement programs that turn GenAI pilots into production — through operating models, training, governance, and workflow integration across engineering, product, and business teams.",
