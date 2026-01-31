@@ -98,7 +98,7 @@ window.SITE = {
     },
 
     {
-      company: "City Colleges of Chicago",
+      company: "Chicago City Colleges",
       title: "Adjunct Professor of Computer Science",
       dates: "Jul 2025 – Present",
       location: "Chicago Area",
