@@ -127,6 +127,19 @@ window.SITE = {
 
   projects: [
     {
+      name: "ClawguardAI — Real-Time AI Agent Governance",
+      period: "2025 – Present",
+      description:
+        "Built a real-time monitoring and threat detection system for AI agents. Intercepts agent actions, detects prompt injection attacks and dangerous commands, and provides a live dashboard for security visibility. Published as an open-source npm package with one-command install (npx @stanchat/clawguard start). Includes threat category filtering, session archiving, configurable protection levels, and automatic version checking.",
+      tags: ["AI Governance", "Agent Safety", "Threat Detection", "Prompt Injection", "Open Source", "npm"],
+      links: [
+        { label: "Website", url: "https://clawguardai.com" },
+        { label: "npm", url: "https://www.npmjs.com/package/@stanchat/clawguard" }
+        
+      ]
+    },
+    
+    {
       name: "AI Enablement Manifesto",
       period: "Jan 2026 – Present",
       description:
