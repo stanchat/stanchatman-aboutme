@@ -59,9 +59,26 @@ window.SITE = {
 
   experience: [
     {
+      company: "Atmosera",
+      title: "Collaborative Engineer, GitHub Copilot",
+      dates: "Jan 2026 – Present",
+      location: "United States",
+      bullets: [
+        "Currently serving as a Collaborative Engineer at Atmosera, where I help enterprise engineering teams turn AI investment into measurable ROI through the GitHub Copilot Adoption Framework (GCAF). I specialize in 'de-fearing' AI for developers and teaching them to act as orchestrators of autonomous agents. My work focuses on high-velocity enablement sprints, leveraging MCP-powered tools and agentic workflows to modernize legacy systems and increase developer satisfaction across the SDLC",
+"Implement the GitHub Copilot Adoption Framework (GCAF): Lead high-touch "white glove" enablement for enterprise clients, moving teams from basic autocomplete to advanced AI-assisted development",
+
+"Facilitate Scalable Enablement Sprints: Design and deliver intensive two-week training sprints for cohorts of up to 50 engineers, including custom workshops, live coding sessions, and daily technical office hours",
+"Master Agentic Workflows: Mentor developers on advanced Copilot features, including Agent Mode for multi-file reasoning, Copilot Workspace for implementation planning, and the Copilot CLI for DevOps automation",
+"Standardize Enterprise AI Governance: Leverage Custom Instructions and Model Context Protocol (MCP) servers to enforce organization-wide coding standards (e.g., Definition of Done), ensuring consistency across complex repositories",
+"Quantify Productivity via SPACE/DORA: Measure the downstream impact of AI adoption using the SPACE framework and DORA metrics, focusing on qualitative gains like developer flow and quantitative gains in velocity and quality",
+"Bridge the Onboarding Gap: Utilize repository reasoning and dependency mapping to accelerate the time-to-value for engineers navigating large-scale legacy codebases"
+      ],
+      links: []
+    },
+    {
       company: "Deloitte",
       title: "AI Enablement Lead",
-      dates: "2025 – Present",
+      dates: "Sep 2025 – Feb 2026",
       location: "United States",
       bullets: [
         "Leading enterprise-scale GenAI enablement programs spanning training, operating models, governance, and adoption measurement",
