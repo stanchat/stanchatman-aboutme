@@ -65,8 +65,7 @@ window.SITE = {
       location: "United States",
       bullets: [
         "Currently serving as a Collaborative Engineer at Atmosera, where I help enterprise engineering teams turn AI investment into measurable ROI through the GitHub Copilot Adoption Framework (GCAF). I specialize in 'de-fearing' AI for developers and teaching them to act as orchestrators of autonomous agents. My work focuses on high-velocity enablement sprints, leveraging MCP-powered tools and agentic workflows to modernize legacy systems and increase developer satisfaction across the SDLC",
-"Implement the GitHub Copilot Adoption Framework (GCAF): Lead high-touch "white glove" enablement for enterprise clients, moving teams from basic autocomplete to advanced AI-assisted development",
-
+"Implement the GitHub Copilot Adoption Framework (GCAF): Lead high-touch -white glove- enablement for enterprise clients, moving teams from basic autocomplete to advanced AI-assisted development",
 "Facilitate Scalable Enablement Sprints: Design and deliver intensive two-week training sprints for cohorts of up to 50 engineers, including custom workshops, live coding sessions, and daily technical office hours",
 "Master Agentic Workflows: Mentor developers on advanced Copilot features, including Agent Mode for multi-file reasoning, Copilot Workspace for implementation planning, and the Copilot CLI for DevOps automation",
 "Standardize Enterprise AI Governance: Leverage Custom Instructions and Model Context Protocol (MCP) servers to enforce organization-wide coding standards (e.g., Definition of Done), ensuring consistency across complex repositories",
