@@ -143,6 +143,24 @@ window.SITE = {
   ],
 
   projects: [
+  {
+  "name": "Brevid.app",
+  "period": "Apr 2026 – Present",
+  "description": "Built an AI-powered text-to-broadcast video platform focused on making high-quality short-form video creation faster and more accessible. Brevid.app enables users to move from concept to structured video plan, generated scenes, voiceover, and final exports through an AI-assisted workflow tailored for modern content creation.",
+  "tags": [
+    "Startup",
+    "Generative AI",
+    "AI Video",
+    "Founder",
+    "Product Development"
+  ],
+  "links": [
+    {
+      "label": "Website",
+      "url": "https://brevid.app/"
+    }
+  ]
+},
     {
       name: "ClawguardAI — Real-Time AI Agent Governance",
       period: "2025 – Present",
