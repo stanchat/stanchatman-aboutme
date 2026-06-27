@@ -1,0 +1,920 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Game Development AI Research Demo | Stanley Chatman</title>
+  <meta name="description" content="Interactive game development demo showing a playable 2D scene, scene graph, collision logic, asset manifest, and engine-style scripting." />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #5b6472;
+      --line: #e5e7eb;
+      --accent: #dc2626;
+      --accent-dark: #991b1b;
+      --soft: #fff1f2;
+      --code: #020617;
+      --sky: #dbeafe;
+      --ground: #16a34a;
+      --player: #2563eb;
+      --coin: #f59e0b;
+      --hazard: #ef4444;
+      --goal: #7c3aed;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background: #f8fafc;
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--accent-dark);
+      font-weight: 750;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    header {
+      color: white;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(220, 38, 38, 0.48), transparent 30%),
+        linear-gradient(135deg, #020617 0%, #450a0a 58%, #7f1d1d 100%);
+      padding: 24px;
+    }
+
+    nav {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      font-weight: 850;
+      letter-spacing: 0.01em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a,
+    .nav-links a:link,
+    .nav-links a:visited {
+      color: #fee2e2;
+    }
+
+    .hero {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 72px 0 86px;
+    }
+
+    .eyebrow {
+      color: #fecaca;
+      font-size: 0.78rem;
+      font-weight: 850;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin: 0 0 10px;
+    }
+
+    h1 {
+      max-width: 980px;
+      font-size: clamp(2.2rem, 5vw, 4.7rem);
+      line-height: 1.02;
+      margin: 0;
+    }
+
+    .hero p.summary {
+      max-width: 840px;
+      color: #e5e7eb;
+      font-size: 1.12rem;
+      margin: 24px 0 0;
+    }
+
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 54px 24px 90px;
+    }
+
+    section {
+      margin: 0 0 34px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 0.82fr 1.18fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: clamp(1.6rem, 3vw, 2.35rem);
+      line-height: 1.1;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 1.18rem;
+    }
+
+    p {
+      color: var(--muted);
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .tag {
+      border: 1px solid var(--line);
+      background: white;
+      color: #111827;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      font-weight: 750;
+    }
+
+    .controls {
+      display: grid;
+      gap: 16px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      font-weight: 750;
+      color: #1f2937;
+    }
+
+    input[type="range"],
+    select {
+      width: 100%;
+    }
+
+    select {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #ffffff;
+      color: #111827;
+      font-weight: 700;
+    }
+
+    .value {
+      color: var(--accent-dark);
+      font-weight: 850;
+    }
+
+    .game-shell {
+      background: #020617;
+      border-radius: 20px;
+      padding: 16px;
+      color: #e5e7eb;
+    }
+
+    .game-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .game-title {
+      font-weight: 850;
+      color: #ffffff;
+    }
+
+    .game-stats {
+      color: #fecaca;
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    canvas {
+      width: 100%;
+      height: auto;
+      border-radius: 16px;
+      background: var(--sky);
+      border: 1px solid rgba(255,255,255,0.16);
+      display: block;
+    }
+
+    .control-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+      justify-content: center;
+    }
+
+    .small-button {
+      min-width: 82px;
+    }
+
+    .scene-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .node {
+      border: 1px solid var(--line);
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-weight: 750;
+      color: #1f2937;
+    }
+
+    .node span {
+      color: var(--accent-dark);
+      font-weight: 900;
+    }
+
+    pre {
+      margin: 0;
+      background: var(--code);
+      color: #e5e7eb;
+      border-radius: 18px;
+      padding: 18px;
+      overflow-x: auto;
+      font-size: 0.93rem;
+      line-height: 1.55;
+    }
+
+    code {
+      font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    button,
+    .button,
+    a.button,
+    a.button:link,
+    a.button:visited {
+      appearance: none;
+      border: 1px solid var(--accent);
+      background: var(--accent);
+      color: #ffffff;
+      border-radius: 999px;
+      padding: 11px 15px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-block;
+      text-decoration: none;
+      line-height: 1.2;
+    }
+
+    button:hover,
+    .button:hover,
+    a.button:hover {
+      filter: brightness(0.96);
+      text-decoration: none;
+    }
+
+    .button.secondary,
+    a.button.secondary,
+    a.button.secondary:link,
+    a.button.secondary:visited {
+      background: #ffffff;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+      text-decoration: none;
+    }
+
+    .button.secondary:hover,
+    a.button.secondary:hover {
+      background: #fee2e2;
+      color: #111827;
+      text-decoration: none;
+    }
+
+    .note {
+      border-left: 5px solid var(--accent);
+      background: #fff1f2;
+      padding: 16px 18px;
+      border-radius: 14px;
+      color: #1f2937;
+    }
+
+    ul {
+      margin-bottom: 0;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    footer {
+      text-align: center;
+      color: #64748b;
+      padding: 22px 24px 52px;
+    }
+
+    @media (max-width: 900px) {
+      .grid,
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 52px 0 66px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="brand">Stanley Chatman</div>
+      <div class="nav-links">
+        <a href="./">Back to Portfolio</a>
+        <a href="https://github.com/stanchat">GitHub</a>
+        <a href="https://www.linkedin.com/in/stanchatman/">LinkedIn</a>
+      </div>
+    </nav>
+
+    <div class="hero">
+      <p class="eyebrow">Game Development / AI Research Demo</p>
+      <h1>Playable 2D game scene sample for digital asset review.</h1>
+      <p class="summary">
+        This demo shows how a small game asset can be structured, played, documented,
+        and reviewed for an AI-assisted game development workflow. It combines a playable
+        browser scene, Godot-style node thinking, collision logic, asset metadata, and QA checks.
+      </p>
+      <div class="tag-row">
+        <span class="tag">Godot-style scene graph</span>
+        <span class="tag">Defold / Solar2D-style 2D loop</span>
+        <span class="tag">Panda3D / Stride asset thinking</span>
+        <span class="tag">Collision and gameplay QA</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="card">
+      <p class="eyebrow">Live game prototype</p>
+      <h2>Mini platformer collection scene</h2>
+      <p>
+        Use the buttons or keyboard controls to move the player, collect coins, avoid hazards,
+        and reach the goal. Adjust the gameplay parameters to see how design values affect the scene.
+      </p>
+
+      <div class="grid">
+        <div class="controls">
+          <label>
+            Game mode
+            <select id="gameMode">
+              <option value="tutorial">Tutorial level</option>
+              <option value="arcade">Arcade challenge</option>
+              <option value="puzzle">Puzzle platformer</option>
+              <option value="speed">Speedrun test</option>
+            </select>
+          </label>
+
+          <label>
+            Player speed: <span class="value"><span id="speedValue">5</span></span>
+            <input id="speed" type="range" min="2" max="9" value="5" step="1" />
+          </label>
+
+          <label>
+            Jump strength: <span class="value"><span id="jumpValue">12</span></span>
+            <input id="jump" type="range" min="8" max="18" value="12" step="1" />
+          </label>
+
+          <label>
+            Hazard count: <span class="value"><span id="hazardValue">2</span></span>
+            <input id="hazards" type="range" min="0" max="4" value="2" step="1" />
+          </label>
+
+          <label>
+            Coin count: <span class="value"><span id="coinValue">4</span></span>
+            <input id="coins" type="range" min="1" max="6" value="4" step="1" />
+          </label>
+
+          <div class="note">
+            Controls: use A/D or arrow keys to move, W/Space/Up to jump, or use the buttons below the game.
+          </div>
+        </div>
+
+        <div class="game-shell">
+          <div class="game-header">
+            <div class="game-title" id="gameTitle">Tutorial Level</div>
+            <div class="game-stats" id="gameStats">Coins: 0 / 4 · State: Playing</div>
+          </div>
+
+          <canvas id="gameCanvas" width="760" height="420" aria-label="Playable 2D game prototype"></canvas>
+
+          <div class="control-row">
+            <button class="small-button" id="leftBtn" type="button">Left</button>
+            <button class="small-button" id="jumpBtn" type="button">Jump</button>
+            <button class="small-button" id="rightBtn" type="button">Right</button>
+            <button class="small-button" id="resetBtn" type="button">Reset</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="two-col">
+      <div class="card">
+        <p class="eyebrow">Generated script</p>
+        <h2>Godot-style player controller</h2>
+        <p>
+          This GDScript-style output documents the core gameplay logic so a reviewer can
+          understand movement, jumping, collision, and collection behavior.
+        </p>
+        <pre><code id="gameCode"></code></pre>
+        <div class="button-row">
+          <button id="copyCode" type="button">Copy script</button>
+          <a class="button secondary" href="#review">Review checklist</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="eyebrow">Scene organization</p>
+        <h2>Engine-style scene graph</h2>
+        <p>
+          A clean game asset should make hierarchy, components, collisions, and resources easy to inspect.
+        </p>
+        <div class="scene-list">
+          <div class="node"><span>MainScene</span> - root game scene</div>
+          <div class="node">├─ <span>Player</span> - character body, collider, input controller</div>
+          <div class="node">├─ <span>TileMap</span> - platforms and ground collision</div>
+          <div class="node">├─ <span>Coins</span> - collectible area triggers</div>
+          <div class="node">├─ <span>Hazards</span> - reset / damage collision zones</div>
+          <div class="node">└─ <span>Goal</span> - level completion trigger</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="review" class="card">
+      <p class="eyebrow">Quality review</p>
+      <h2>Game asset review checklist</h2>
+      <p>
+        This review structure helps an AI research workflow evaluate whether a game asset is playable,
+        documented, testable, and understandable across different engines.
+      </p>
+
+      <div class="two-col">
+        <div>
+          <h3>Gameplay checks</h3>
+          <ul>
+            <li>Player movement responds to input and remains bounded inside the level.</li>
+            <li>Jump strength and speed are parameterized instead of hard-coded without explanation.</li>
+            <li>Coins are collectible and update score state.</li>
+            <li>Hazards create a clear fail/reset condition.</li>
+            <li>Goal state is reachable and visibly communicates completion.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3>Asset quality checks</h3>
+          <ul>
+            <li>Scene graph separates player, platforms, collectibles, hazards, and goal objects.</li>
+            <li>Collision roles are documented.</li>
+            <li>Asset manifest includes visual, physics, and script responsibilities.</li>
+            <li>Generated script is readable enough for a reviewer to port into an engine.</li>
+            <li>Controls and expected behavior are documented.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <p class="eyebrow">How this maps to the survey tools</p>
+      <h2>Relevant game engine patterns represented</h2>
+      <ul>
+        <li><strong>Godot:</strong> scene graph, node hierarchy, GDScript-style player controller, collision areas.</li>
+        <li><strong>Defold / Solar 2D:</strong> lightweight 2D game loop, sprites, input handling, and collision triggers.</li>
+        <li><strong>Panda 3D:</strong> entity-style objects, movement update loop, and asset state management.</li>
+        <li><strong>Stride / Open 3D Engine:</strong> component-based thinking, scene organization, and gameplay QA.</li>
+        <li><strong>AI research workflow:</strong> structured metadata, reproducible interaction rules, and reviewer-ready notes.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>Game Development AI Research Demo · Stanley Chatman</p>
+  </footer>
+
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const gameMode = document.getElementById("gameMode");
+    const speed = document.getElementById("speed");
+    const jump = document.getElementById("jump");
+    const hazardsInput = document.getElementById("hazards");
+    const coinsInput = document.getElementById("coins");
+
+    const speedValue = document.getElementById("speedValue");
+    const jumpValue = document.getElementById("jumpValue");
+    const hazardValue = document.getElementById("hazardValue");
+    const coinValue = document.getElementById("coinValue");
+
+    const gameTitle = document.getElementById("gameTitle");
+    const gameStats = document.getElementById("gameStats");
+    const gameCode = document.getElementById("gameCode");
+
+    const keys = {
+      left: false,
+      right: false,
+      jump: false
+    };
+
+    const modeMap = {
+      tutorial: "Tutorial Level",
+      arcade: "Arcade Challenge",
+      puzzle: "Puzzle Platformer",
+      speed: "Speedrun Test"
+    };
+
+    let player;
+    let platforms;
+    let coins;
+    let hazards;
+    let goal;
+    let collected;
+    let status;
+
+    function resetLevel() {
+      player = {
+        x: 55,
+        y: 300,
+        w: 34,
+        h: 42,
+        vx: 0,
+        vy: 0,
+        grounded: false
+      };
+
+      platforms = [
+        { x: 0, y: 380, w: 760, h: 40 },
+        { x: 145, y: 300, w: 130, h: 18 },
+        { x: 340, y: 245, w: 140, h: 18 },
+        { x: 545, y: 190, w: 145, h: 18 }
+      ];
+
+      buildCoins();
+      buildHazards();
+
+      goal = { x: 682, y: 132, w: 34, h: 58 };
+      collected = 0;
+      status = "Playing";
+      renderAll();
+    }
+
+    function buildCoins() {
+      const count = Number(coinsInput.value);
+      const positions = [
+        { x: 195, y: 260 },
+        { x: 395, y: 205 },
+        { x: 595, y: 150 },
+        { x: 705, y: 340 },
+        { x: 295, y: 340 },
+        { x: 490, y: 340 }
+      ];
+
+      coins = positions.slice(0, count).map((coin) => ({
+        x: coin.x,
+        y: coin.y,
+        r: 12,
+        active: true
+      }));
+    }
+
+    function buildHazards() {
+      const count = Number(hazardsInput.value);
+      const positions = [
+        { x: 250, y: 354, w: 48, h: 26 },
+        { x: 510, y: 354, w: 48, h: 26 },
+        { x: 420, y: 219, w: 38, h: 26 },
+        { x: 610, y: 164, w: 38, h: 26 }
+      ];
+
+      hazards = positions.slice(0, count);
+    }
+
+    function rectsOverlap(a, b) {
+      return a.x < b.x + b.w &&
+        a.x + a.w > b.x &&
+        a.y < b.y + b.h &&
+        a.y + a.h > b.y;
+    }
+
+    function circleRectOverlap(circle, rect) {
+      const nearestX = Math.max(rect.x, Math.min(circle.x, rect.x + rect.w));
+      const nearestY = Math.max(rect.y, Math.min(circle.y, rect.y + rect.h));
+      const dx = circle.x - nearestX;
+      const dy = circle.y - nearestY;
+      return dx * dx + dy * dy < circle.r * circle.r;
+    }
+
+    function update() {
+      const moveSpeed = Number(speed.value);
+      const jumpStrength = Number(jump.value);
+
+      player.vx = 0;
+      if (keys.left) player.vx = -moveSpeed;
+      if (keys.right) player.vx = moveSpeed;
+
+      if (keys.jump && player.grounded) {
+        player.vy = -jumpStrength;
+        player.grounded = false;
+      }
+
+      player.vy += 0.55;
+      player.x += player.vx;
+      player.y += player.vy;
+
+      player.x = Math.max(0, Math.min(canvas.width - player.w, player.x));
+
+      player.grounded = false;
+      for (const p of platforms) {
+        if (rectsOverlap(player, p)) {
+          const prevBottom = player.y + player.h - player.vy;
+          if (prevBottom <= p.y + 6 && player.vy >= 0) {
+            player.y = p.y - player.h;
+            player.vy = 0;
+            player.grounded = true;
+          }
+        }
+      }
+
+      if (player.y > canvas.height + 80) {
+        status = "Reset after fall";
+        resetPlayerOnly();
+      }
+
+      for (const coin of coins) {
+        if (coin.active && circleRectOverlap(coin, player)) {
+          coin.active = false;
+          collected += 1;
+        }
+      }
+
+      for (const hazard of hazards) {
+        if (rectsOverlap(player, hazard)) {
+          status = "Hazard hit - reset";
+          resetPlayerOnly();
+        }
+      }
+
+      if (rectsOverlap(player, goal)) {
+        status = collected === coins.length ? "Complete" : "Goal reached - collect remaining coins";
+      }
+
+      keys.jump = false;
+      renderAll();
+    }
+
+    function resetPlayerOnly() {
+      player.x = 55;
+      player.y = 300;
+      player.vx = 0;
+      player.vy = 0;
+    }
+
+    function drawRoundedRect(x, y, w, h, r, fill) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+      ctx.fillStyle = fill;
+      ctx.fill();
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      gradient.addColorStop(0, "#dbeafe");
+      gradient.addColorStop(1, "#f8fafc");
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "rgba(255,255,255,0.7)";
+      ctx.beginPath();
+      ctx.arc(100, 70, 28, 0, Math.PI * 2);
+      ctx.arc(128, 70, 38, 0, Math.PI * 2);
+      ctx.arc(165, 70, 28, 0, Math.PI * 2);
+      ctx.fill();
+
+      for (const p of platforms) {
+        drawRoundedRect(p.x, p.y, p.w, p.h, 8, "#16a34a");
+        ctx.fillStyle = "#166534";
+        ctx.fillRect(p.x, p.y + p.h - 5, p.w, 5);
+      }
+
+      for (const hazard of hazards) {
+        drawRoundedRect(hazard.x, hazard.y, hazard.w, hazard.h, 7, "#ef4444");
+        ctx.fillStyle = "#fee2e2";
+        ctx.font = "bold 15px sans-serif";
+        ctx.fillText("!", hazard.x + hazard.w / 2 - 4, hazard.y + 18);
+      }
+
+      for (const coin of coins) {
+        if (!coin.active) continue;
+        ctx.beginPath();
+        ctx.arc(coin.x, coin.y, coin.r, 0, Math.PI * 2);
+        ctx.fillStyle = "#f59e0b";
+        ctx.fill();
+        ctx.strokeStyle = "#92400e";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      }
+
+      drawRoundedRect(goal.x, goal.y, goal.w, goal.h, 8, "#7c3aed");
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 12px sans-serif";
+      ctx.fillText("GOAL", goal.x - 3, goal.y - 8);
+
+      drawRoundedRect(player.x, player.y, player.w, player.h, 10, "#2563eb");
+      ctx.fillStyle = "#ffffff";
+      ctx.beginPath();
+      ctx.arc(player.x + 11, player.y + 14, 4, 0, Math.PI * 2);
+      ctx.arc(player.x + 23, player.y + 14, 4, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "#111827";
+      ctx.font = "bold 15px sans-serif";
+      ctx.fillText("Playable canvas scene: movement, collisions, collectibles, goal trigger", 22, 28);
+    }
+
+    function renderMetadata() {
+      speedValue.textContent = speed.value;
+      jumpValue.textContent = jump.value;
+      hazardValue.textContent = hazardsInput.value;
+      coinValue.textContent = coinsInput.value;
+      gameTitle.textContent = modeMap[gameMode.value];
+      gameStats.textContent = `Coins: ${collected} / ${coins.length} · State: ${status}`;
+
+      gameCode.textContent = `# Godot-style player controller demo
+# Engine pattern: CharacterBody2D + Area2D triggers
+
+extends CharacterBody2D
+
+@export var player_speed = ${speed.value}
+@export var jump_strength = ${jump.value}
+@export var hazard_count = ${hazardsInput.value}
+@export var coin_count = ${coinsInput.value}
+
+var coins_collected = ${collected}
+var total_coins = ${coins.length}
+var game_state = "${status}"
+
+func _physics_process(delta):
+    var direction = Input.get_axis("move_left", "move_right")
+    velocity.x = direction * player_speed * 60
+
+    if Input.is_action_just_pressed("jump") and is_on_floor():
+        velocity.y = -jump_strength * 60
+
+    velocity.y += 32
+    move_and_slide()
+
+func _on_coin_collected(coin):
+    coins_collected += 1
+    coin.queue_free()
+
+func _on_hazard_entered():
+    reset_player_to_spawn()
+
+func _on_goal_entered():
+    if coins_collected == total_coins:
+        game_state = "complete"
+    else:
+        game_state = "collect_remaining_coins"
+
+# Review notes:
+# - Movement parameters are explicit.
+# - Collectibles, hazards, and goal triggers are separated.
+# - Scene hierarchy supports inspection and engine portability.`;
+    }
+
+    function renderAll() {
+      draw();
+      renderMetadata();
+    }
+
+    function loop() {
+      update();
+      requestAnimationFrame(loop);
+    }
+
+    function refreshLevelSettings() {
+      buildCoins();
+      buildHazards();
+      collected = 0;
+      status = "Playing";
+      renderAll();
+    }
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft" || event.key.toLowerCase() === "a") keys.left = true;
+      if (event.key === "ArrowRight" || event.key.toLowerCase() === "d") keys.right = true;
+      if (event.key === "ArrowUp" || event.key.toLowerCase() === "w" || event.code === "Space") keys.jump = true;
+    });
+
+    document.addEventListener("keyup", (event) => {
+      if (event.key === "ArrowLeft" || event.key.toLowerCase() === "a") keys.left = false;
+      if (event.key === "ArrowRight" || event.key.toLowerCase() === "d") keys.right = false;
+    });
+
+    function holdButton(buttonId, keyName) {
+      const button = document.getElementById(buttonId);
+      button.addEventListener("pointerdown", () => { keys[keyName] = true; });
+      button.addEventListener("pointerup", () => { keys[keyName] = false; });
+      button.addEventListener("pointerleave", () => { keys[keyName] = false; });
+      button.addEventListener("click", () => {
+        if (keyName === "jump") keys.jump = true;
+      });
+    }
+
+    holdButton("leftBtn", "left");
+    holdButton("rightBtn", "right");
+    holdButton("jumpBtn", "jump");
+
+    document.getElementById("resetBtn").addEventListener("click", resetLevel);
+
+    [gameMode, speed, jump].forEach((control) => {
+      control.addEventListener("input", renderAll);
+      control.addEventListener("change", renderAll);
+    });
+
+    [hazardsInput, coinsInput].forEach((control) => {
+      control.addEventListener("input", refreshLevelSettings);
+      control.addEventListener("change", refreshLevelSettings);
+    });
+
+    document.getElementById("copyCode").addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(gameCode.textContent);
+        document.getElementById("copyCode").textContent = "Copied";
+        setTimeout(() => {
+          document.getElementById("copyCode").textContent = "Copy script";
+        }, 1400);
+      } catch (error) {
+        alert("Copy failed. You can still select the code manually.");
+      }
+    });
+
+    resetLevel();
+    loop();
+  </script>
+</body>
+</html>
