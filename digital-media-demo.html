@@ -1,0 +1,903 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>2D and 3D Digital Media AI Research Demo | Stanley Chatman</title>
+  <meta name="description" content="Interactive 2D and 3D digital media demo showing vector, raster, pixel art, 3D asset preview, manifest generation, and QA review checks." />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #5b6472;
+      --line: #e5e7eb;
+      --accent: #0891b2;
+      --accent-dark: #155e75;
+      --soft: #ecfeff;
+      --code: #020617;
+      --pink: #ec4899;
+      --yellow: #f59e0b;
+      --green: #22c55e;
+      --purple: #8b5cf6;
+      --blue: #2563eb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background: #f8fafc;
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--accent-dark);
+      font-weight: 750;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    header {
+      color: white;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(8, 145, 178, 0.55), transparent 30%),
+        linear-gradient(135deg, #020617 0%, #164e63 58%, #0f766e 100%);
+      padding: 24px;
+    }
+
+    nav {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      font-weight: 850;
+      letter-spacing: 0.01em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a,
+    .nav-links a:link,
+    .nav-links a:visited {
+      color: #cffafe;
+    }
+
+    .hero {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 72px 0 86px;
+    }
+
+    .eyebrow {
+      color: #a5f3fc;
+      font-size: 0.78rem;
+      font-weight: 850;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin: 0 0 10px;
+    }
+
+    h1 {
+      max-width: 1000px;
+      font-size: clamp(2.2rem, 5vw, 4.7rem);
+      line-height: 1.02;
+      margin: 0;
+    }
+
+    .hero p.summary {
+      max-width: 840px;
+      color: #e5e7eb;
+      font-size: 1.12rem;
+      margin: 24px 0 0;
+    }
+
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 54px 24px 90px;
+    }
+
+    section {
+      margin: 0 0 34px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 0.82fr 1.18fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: clamp(1.6rem, 3vw, 2.35rem);
+      line-height: 1.1;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 1.18rem;
+    }
+
+    p {
+      color: var(--muted);
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .tag {
+      border: 1px solid var(--line);
+      background: white;
+      color: #111827;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      font-weight: 750;
+    }
+
+    .controls {
+      display: grid;
+      gap: 16px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      font-weight: 750;
+      color: #1f2937;
+    }
+
+    input[type="range"],
+    select {
+      width: 100%;
+    }
+
+    select {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #ffffff;
+      color: #111827;
+      font-weight: 700;
+    }
+
+    .value {
+      color: var(--accent-dark);
+      font-weight: 850;
+    }
+
+    .studio-shell {
+      background: #020617;
+      border-radius: 20px;
+      padding: 16px;
+      color: #e5e7eb;
+    }
+
+    .studio-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .studio-title {
+      font-weight: 850;
+      color: #ffffff;
+    }
+
+    .studio-meta {
+      color: #a5f3fc;
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 1fr 0.68fr;
+      gap: 14px;
+    }
+
+    .canvas-panel {
+      background:
+        linear-gradient(45deg, #e2e8f0 25%, transparent 25%),
+        linear-gradient(-45deg, #e2e8f0 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #e2e8f0 75%),
+        linear-gradient(-45deg, transparent 75%, #e2e8f0 75%);
+      background-size: 24px 24px;
+      background-position: 0 0, 0 12px, 12px -12px, -12px 0px;
+      background-color: #f8fafc;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.16);
+      min-height: 420px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    svg {
+      width: 100%;
+      height: 100%;
+      min-height: 420px;
+      display: block;
+    }
+
+    .side-panel {
+      display: grid;
+      gap: 14px;
+    }
+
+    .preview-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .preview-card h3 {
+      color: #ffffff;
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+
+    .pixel-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 18px);
+      grid-template-rows: repeat(8, 18px);
+      gap: 2px;
+    }
+
+    .pixel {
+      width: 18px;
+      height: 18px;
+      background: #1f2937;
+      border-radius: 2px;
+    }
+
+    .scene3d {
+      height: 142px;
+      position: relative;
+      perspective: 600px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background: radial-gradient(circle at 50% 30%, rgba(8,145,178,0.35), transparent 45%), #0f172a;
+      border-radius: 12px;
+    }
+
+    .cube {
+      width: 86px;
+      height: 86px;
+      position: relative;
+      transform-style: preserve-3d;
+      transform: rotateX(-22deg) rotateY(35deg);
+      transition: transform 0.25s ease;
+    }
+
+    .face {
+      position: absolute;
+      width: 86px;
+      height: 86px;
+      opacity: 0.92;
+      border: 1px solid rgba(255,255,255,0.35);
+    }
+
+    .front { transform: translateZ(43px); background: var(--blue); }
+    .back { transform: rotateY(180deg) translateZ(43px); background: var(--purple); }
+    .right { transform: rotateY(90deg) translateZ(43px); background: var(--pink); }
+    .left { transform: rotateY(-90deg) translateZ(43px); background: var(--green); }
+    .top { transform: rotateX(90deg) translateZ(43px); background: var(--yellow); }
+    .bottom { transform: rotateX(-90deg) translateZ(43px); background: #0f766e; }
+
+    .layer-list {
+      display: grid;
+      gap: 7px;
+      margin-top: 8px;
+    }
+
+    .layer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: rgba(255,255,255,0.07);
+      color: #d1d5db;
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-weight: 750;
+      font-size: 0.86rem;
+    }
+
+    .layer span {
+      color: #a5f3fc;
+      font-size: 0.78rem;
+    }
+
+    pre {
+      margin: 0;
+      background: var(--code);
+      color: #e5e7eb;
+      border-radius: 18px;
+      padding: 18px;
+      overflow-x: auto;
+      font-size: 0.93rem;
+      line-height: 1.55;
+    }
+
+    code {
+      font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    button,
+    .button,
+    a.button,
+    a.button:link,
+    a.button:visited {
+      appearance: none;
+      border: 1px solid var(--accent);
+      background: var(--accent);
+      color: #ffffff;
+      border-radius: 999px;
+      padding: 11px 15px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-block;
+      text-decoration: none;
+      line-height: 1.2;
+    }
+
+    button:hover,
+    .button:hover,
+    a.button:hover {
+      filter: brightness(0.96);
+      text-decoration: none;
+    }
+
+    .button.secondary,
+    a.button.secondary,
+    a.button.secondary:link,
+    a.button.secondary:visited {
+      background: #ffffff;
+      color: #155e75;
+      border: 1px solid #67e8f9;
+      text-decoration: none;
+    }
+
+    .button.secondary:hover,
+    a.button.secondary:hover {
+      background: #cffafe;
+      color: #111827;
+      text-decoration: none;
+    }
+
+    .note {
+      border-left: 5px solid var(--accent);
+      background: #ecfeff;
+      padding: 16px 18px;
+      border-radius: 14px;
+      color: #1f2937;
+    }
+
+    ul {
+      margin-bottom: 0;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    footer {
+      text-align: center;
+      color: #64748b;
+      padding: 22px 24px 52px;
+    }
+
+    @media (max-width: 980px) {
+      .grid,
+      .two-col,
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 52px 0 66px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="brand">Stanley Chatman</div>
+      <div class="nav-links">
+        <a href="./">Back to Portfolio</a>
+        <a href="https://github.com/stanchat">GitHub</a>
+        <a href="https://www.linkedin.com/in/stanchatman/">LinkedIn</a>
+      </div>
+    </nav>
+
+    <div class="hero">
+      <p class="eyebrow">2D / 3D Digital Media / AI Research Demo</p>
+      <h1>Interactive digital asset creation sample for 2D and 3D media review.</h1>
+      <p class="summary">
+        This demo shows how a small digital media asset can be designed, layered, previewed,
+        documented, and reviewed for an AI-assisted creative production workflow. It combines
+        vector art, raster-style brush settings, pixel sprite thinking, 3D object preview, and asset QA.
+      </p>
+      <div class="tag-row">
+        <span class="tag">Inkscape-style vector layers</span>
+        <span class="tag">GIMP / Krita-style raster workflow</span>
+        <span class="tag">Libresprite-style pixel asset</span>
+        <span class="tag">Blender / Godot-style 3D asset review</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="card">
+      <p class="eyebrow">Live digital asset workspace</p>
+      <h2>Brand mascot asset kit</h2>
+      <p>
+        Adjust the art direction below. The vector preview, sprite preview, 3D object preview,
+        layer list, and generated asset manifest update together.
+      </p>
+
+      <div class="grid">
+        <div class="controls">
+          <label>
+            Asset style
+            <select id="assetStyle">
+              <option value="robot">AI robot mascot</option>
+              <option value="fox">Friendly fox icon</option>
+              <option value="orb">Abstract energy orb</option>
+              <option value="ship">Tiny game ship</option>
+            </select>
+          </label>
+
+          <label>
+            Color palette
+            <select id="palette">
+              <option value="cyan">Cyan / Blue</option>
+              <option value="pink">Pink / Purple</option>
+              <option value="green">Green / Gold</option>
+              <option value="mono">Monochrome</option>
+            </select>
+          </label>
+
+          <label>
+            Brush opacity: <span class="value"><span id="opacityValue">70</span>%</span>
+            <input id="opacity" type="range" min="20" max="100" value="70" step="5" />
+          </label>
+
+          <label>
+            Vector stroke: <span class="value"><span id="strokeValue">6</span> px</span>
+            <input id="stroke" type="range" min="2" max="14" value="6" step="1" />
+          </label>
+
+          <label>
+            Pixel sprite scale: <span class="value"><span id="spriteValue">2</span>x</span>
+            <input id="spriteScale" type="range" min="1" max="4" value="2" step="1" />
+          </label>
+
+          <label>
+            3D rotation: <span class="value"><span id="rotationValue">35</span> deg</span>
+            <input id="rotation" type="range" min="-45" max="65" value="35" step="5" />
+          </label>
+
+          <div class="note">
+            Production intent: keep source layers organized, separate vector/raster responsibilities,
+            document export targets, and make the asset easy to inspect or refine.
+          </div>
+        </div>
+
+        <div class="studio-shell">
+          <div class="studio-header">
+            <div class="studio-title" id="studioTitle">AI Robot Mascot</div>
+            <div class="studio-meta" id="studioMeta">1024x1024 source · SVG + PNG + GLB concept</div>
+          </div>
+
+          <div class="workspace">
+            <div class="canvas-panel">
+              <svg id="artSvg" viewBox="0 0 560 560" role="img" aria-label="Digital media vector asset preview">
+                <defs>
+                  <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="14" stdDeviation="12" flood-color="#0f172a" flood-opacity="0.25"/>
+                  </filter>
+                  <radialGradient id="glow" cx="50%" cy="35%" r="60%">
+                    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.8"></stop>
+                    <stop offset="100%" stop-color="#ffffff" stop-opacity="0"></stop>
+                  </radialGradient>
+                </defs>
+                <g id="artLayer"></g>
+              </svg>
+            </div>
+
+            <div class="side-panel">
+              <div class="preview-card">
+                <h3>Libresprite-style pixel preview</h3>
+                <div id="pixelGrid" class="pixel-grid" aria-label="Pixel art preview"></div>
+              </div>
+
+              <div class="preview-card">
+                <h3>Blender-style 3D blockout</h3>
+                <div class="scene3d">
+                  <div id="cube" class="cube">
+                    <div class="face front"></div>
+                    <div class="face back"></div>
+                    <div class="face right"></div>
+                    <div class="face left"></div>
+                    <div class="face top"></div>
+                    <div class="face bottom"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="preview-card">
+                <h3>Layer stack</h3>
+                <div class="layer-list" id="layerList"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="two-col">
+      <div class="card">
+        <p class="eyebrow">Generated documentation</p>
+        <h2>Digital asset manifest</h2>
+        <p>
+          This manifest documents source layers, export targets, and review notes so the asset
+          can be inspected by another designer, developer, or AI research workflow.
+        </p>
+        <pre><code id="manifestCode"></code></pre>
+        <div class="button-row">
+          <button id="copyManifest" type="button">Copy manifest</button>
+          <a class="button secondary" href="#review">Review checklist</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="eyebrow">Creative pipeline</p>
+        <h2>Tool-style workflow plan</h2>
+        <p>
+          This sample keeps different creative responsibilities separated instead of flattening everything
+          into one unexplained image.
+        </p>
+        <pre><code>Vector source:
+- Shape construction
+- Stroke and fill system
+- Scalable SVG export
+
+Raster polish:
+- Brush overlay
+- Texture / shadow pass
+- PNG export
+
+Pixel sprite:
+- 8x8 / 16x16 readability check
+- Palette constraint check
+
+3D blockout:
+- Low-poly form reference
+- Material and rotation notes
+
+Game handoff:
+- Sprite atlas naming
+- UI icon export
+- Godot-ready asset notes</code></pre>
+      </div>
+    </section>
+
+    <section id="review" class="card">
+      <p class="eyebrow">Quality review</p>
+      <h2>2D and 3D digital media asset review checklist</h2>
+      <p>
+        This review structure helps an AI research workflow evaluate whether a creative asset is layered,
+        exportable, readable at multiple sizes, and ready for downstream use.
+      </p>
+
+      <div class="two-col">
+        <div>
+          <h3>2D asset checks</h3>
+          <ul>
+            <li>Vector shapes are separated from raster polish layers.</li>
+            <li>Palette is documented and applied consistently.</li>
+            <li>Icon remains readable in small/pixel preview.</li>
+            <li>Stroke width and opacity are explicit parameters.</li>
+            <li>Export targets include SVG and PNG variants.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3>3D / game handoff checks</h3>
+          <ul>
+            <li>3D blockout communicates silhouette and material direction.</li>
+            <li>Asset name and purpose are clear.</li>
+            <li>Layer stack supports future editing.</li>
+            <li>Sprite/icon usage notes are documented for Godot-style handoff.</li>
+            <li>Review notes explain what is final versus conceptual.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <p class="eyebrow">How this maps to the survey tools</p>
+      <h2>Relevant digital media tool patterns represented</h2>
+      <ul>
+        <li><strong>GIMP:</strong> raster layer polish, opacity control, texture/shadow pass, PNG export thinking.</li>
+        <li><strong>Inkscape:</strong> vector shapes, strokes, scalable SVG construction, icon design.</li>
+        <li><strong>Krita:</strong> brush opacity, illustration polish, paint-over workflow.</li>
+        <li><strong>Libresprite:</strong> pixel readability, constrained palette, small sprite preview.</li>
+        <li><strong>Blender:</strong> low-poly 3D blockout, material direction, rotation/silhouette review.</li>
+        <li><strong>Godot:</strong> game-ready sprite/icon handoff, asset naming, UI/game object notes.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>2D and 3D Digital Media AI Research Demo · Stanley Chatman</p>
+  </footer>
+
+  <script>
+    const assetStyle = document.getElementById("assetStyle");
+    const palette = document.getElementById("palette");
+    const opacity = document.getElementById("opacity");
+    const stroke = document.getElementById("stroke");
+    const spriteScale = document.getElementById("spriteScale");
+    const rotation = document.getElementById("rotation");
+
+    const opacityValue = document.getElementById("opacityValue");
+    const strokeValue = document.getElementById("strokeValue");
+    const spriteValue = document.getElementById("spriteValue");
+    const rotationValue = document.getElementById("rotationValue");
+
+    const studioTitle = document.getElementById("studioTitle");
+    const artLayer = document.getElementById("artLayer");
+    const pixelGrid = document.getElementById("pixelGrid");
+    const cube = document.getElementById("cube");
+    const layerList = document.getElementById("layerList");
+    const manifestCode = document.getElementById("manifestCode");
+
+    const palettes = {
+      cyan: { primary: "#0891b2", secondary: "#2563eb", accent: "#22d3ee", dark: "#164e63", light: "#cffafe" },
+      pink: { primary: "#ec4899", secondary: "#8b5cf6", accent: "#f9a8d4", dark: "#831843", light: "#fce7f3" },
+      green: { primary: "#16a34a", secondary: "#f59e0b", accent: "#86efac", dark: "#14532d", light: "#dcfce7" },
+      mono: { primary: "#334155", secondary: "#111827", accent: "#94a3b8", dark: "#020617", light: "#e5e7eb" }
+    };
+
+    const styleMap = {
+      robot: { title: "AI Robot Mascot", shape: "rounded robot head", exportName: "ai_robot_mascot" },
+      fox: { title: "Friendly Fox Icon", shape: "geometric animal mark", exportName: "friendly_fox_icon" },
+      orb: { title: "Abstract Energy Orb", shape: "glowing abstract symbol", exportName: "energy_orb_symbol" },
+      ship: { title: "Tiny Game Ship", shape: "arcade ship sprite", exportName: "tiny_game_ship" }
+    };
+
+    function svgEl(name, attrs = {}) {
+      const el = document.createElementNS("http://www.w3.org/2000/svg", name);
+      for (const [key, value] of Object.entries(attrs)) {
+        el.setAttribute(key, value);
+      }
+      return el;
+    }
+
+    function drawRobot(colors, strokeWidth, alpha) {
+      artLayer.appendChild(svgEl("ellipse", { cx: 280, cy: 405, rx: 130, ry: 28, fill: "rgba(15,23,42,0.18)" }));
+      artLayer.appendChild(svgEl("rect", { x: 150, y: 145, width: 260, height: 220, rx: 54, fill: colors.light, stroke: colors.dark, "stroke-width": strokeWidth, filter: "url(#softShadow)" }));
+      artLayer.appendChild(svgEl("circle", { cx: 225, cy: 245, r: 28, fill: colors.primary }));
+      artLayer.appendChild(svgEl("circle", { cx: 335, cy: 245, r: 28, fill: colors.secondary }));
+      artLayer.appendChild(svgEl("rect", { x: 220, y: 305, width: 120, height: 20, rx: 10, fill: colors.dark, opacity: alpha }));
+      artLayer.appendChild(svgEl("line", { x1: 280, y1: 145, x2: 280, y2: 92, stroke: colors.dark, "stroke-width": strokeWidth, "stroke-linecap": "round" }));
+      artLayer.appendChild(svgEl("circle", { cx: 280, cy: 78, r: 18, fill: colors.accent, stroke: colors.dark, "stroke-width": strokeWidth / 2 }));
+      artLayer.appendChild(svgEl("circle", { cx: 215, cy: 237, r: 9, fill: "#ffffff", opacity: 0.78 }));
+      artLayer.appendChild(svgEl("circle", { cx: 326, cy: 237, r: 9, fill: "#ffffff", opacity: 0.78 }));
+    }
+
+    function drawFox(colors, strokeWidth, alpha) {
+      artLayer.appendChild(svgEl("ellipse", { cx: 280, cy: 410, rx: 140, ry: 26, fill: "rgba(15,23,42,0.18)" }));
+      artLayer.appendChild(svgEl("polygon", { points: "150,185 205,90 270,185", fill: colors.secondary, stroke: colors.dark, "stroke-width": strokeWidth, filter: "url(#softShadow)" }));
+      artLayer.appendChild(svgEl("polygon", { points: "410,185 355,90 290,185", fill: colors.secondary, stroke: colors.dark, "stroke-width": strokeWidth }));
+      artLayer.appendChild(svgEl("path", { d: "M135 210 Q280 90 425 210 Q380 365 280 390 Q180 365 135 210Z", fill: colors.primary, stroke: colors.dark, "stroke-width": strokeWidth }));
+      artLayer.appendChild(svgEl("path", { d: "M205 280 Q280 330 355 280 Q330 370 280 390 Q230 370 205 280Z", fill: colors.light, opacity: alpha }));
+      artLayer.appendChild(svgEl("circle", { cx: 235, cy: 240, r: 14, fill: colors.dark }));
+      artLayer.appendChild(svgEl("circle", { cx: 325, cy: 240, r: 14, fill: colors.dark }));
+      artLayer.appendChild(svgEl("polygon", { points: "260,282 300,282 280,306", fill: colors.dark }));
+    }
+
+    function drawOrb(colors, strokeWidth, alpha) {
+      artLayer.appendChild(svgEl("ellipse", { cx: 280, cy: 410, rx: 135, ry: 30, fill: "rgba(15,23,42,0.18)" }));
+      artLayer.appendChild(svgEl("circle", { cx: 280, cy: 250, r: 132, fill: colors.primary, stroke: colors.dark, "stroke-width": strokeWidth, filter: "url(#softShadow)" }));
+      artLayer.appendChild(svgEl("circle", { cx: 250, cy: 210, r: 88, fill: "url(#glow)", opacity: alpha }));
+      artLayer.appendChild(svgEl("path", { d: "M165 265 C235 165, 340 335, 400 230", fill: "none", stroke: colors.accent, "stroke-width": strokeWidth * 2, "stroke-linecap": "round", opacity: alpha }));
+      artLayer.appendChild(svgEl("path", { d: "M180 300 C260 240, 325 305, 385 250", fill: "none", stroke: "#ffffff", "stroke-width": strokeWidth, "stroke-linecap": "round", opacity: 0.72 }));
+    }
+
+    function drawShip(colors, strokeWidth, alpha) {
+      artLayer.appendChild(svgEl("ellipse", { cx: 280, cy: 410, rx: 125, ry: 24, fill: "rgba(15,23,42,0.18)" }));
+      artLayer.appendChild(svgEl("polygon", { points: "280,100 405,360 280,310 155,360", fill: colors.primary, stroke: colors.dark, "stroke-width": strokeWidth, filter: "url(#softShadow)" }));
+      artLayer.appendChild(svgEl("polygon", { points: "280,150 330,295 280,275 230,295", fill: colors.light, opacity: alpha }));
+      artLayer.appendChild(svgEl("circle", { cx: 280, cy: 240, r: 30, fill: colors.secondary, stroke: colors.dark, "stroke-width": strokeWidth / 2 }));
+      artLayer.appendChild(svgEl("path", { d: "M215 350 L190 420 L255 370", fill: colors.accent, opacity: alpha }));
+      artLayer.appendChild(svgEl("path", { d: "M345 350 L370 420 L305 370", fill: colors.accent, opacity: alpha }));
+    }
+
+    function renderPixels(colors, selectedStyle, scale) {
+      pixelGrid.innerHTML = "";
+      pixelGrid.style.gridTemplateColumns = `repeat(8, ${18 + scale * 2}px)`;
+      pixelGrid.style.gridTemplateRows = `repeat(8, ${18 + scale * 2}px)`;
+
+      const patterns = {
+        robot: [
+          "00111100","01111110","11011011","11111111","11100111","01111110","00100100","01000010"
+        ],
+        fox: [
+          "10000001","11000011","11100111","11111111","01111110","00111100","00011000","00100100"
+        ],
+        orb: [
+          "00111100","01111110","11111111","11111111","11111111","01111110","00111100","00011000"
+        ],
+        ship: [
+          "00011000","00111100","00111100","01111110","11111111","10111101","00100100","01000010"
+        ]
+      };
+
+      const pattern = patterns[selectedStyle];
+      for (const row of pattern) {
+        for (const cell of row) {
+          const div = document.createElement("div");
+          div.className = "pixel";
+          div.style.width = `${18 + scale * 2}px`;
+          div.style.height = `${18 + scale * 2}px`;
+          div.style.background = cell === "1" ? colors.primary : "#111827";
+          pixelGrid.appendChild(div);
+        }
+      }
+    }
+
+    function renderLayers(styleLabel, colors) {
+      const layers = [
+        ["Vector_Base", "SVG"],
+        ["Stroke_System", "Editable"],
+        ["Raster_Shadow", "PNG"],
+        ["Brush_Highlight", "Krita/GIMP"],
+        ["Pixel_Preview", "Sprite"],
+        ["3D_Blockout", "Concept"]
+      ];
+
+      layerList.innerHTML = "";
+      layers.forEach(([name, type]) => {
+        const div = document.createElement("div");
+        div.className = "layer";
+        div.innerHTML = `${name}<span>${type}</span>`;
+        layerList.appendChild(div);
+      });
+    }
+
+    function render() {
+      const selectedStyle = assetStyle.value;
+      const selectedPalette = palette.value;
+      const colors = palettes[selectedPalette];
+      const info = styleMap[selectedStyle];
+      const alpha = Number(opacity.value) / 100;
+      const strokeWidth = Number(stroke.value);
+      const scale = Number(spriteScale.value);
+      const rot = Number(rotation.value);
+
+      opacityValue.textContent = opacity.value;
+      strokeValue.textContent = stroke.value;
+      spriteValue.textContent = spriteScale.value;
+      rotationValue.textContent = rotation.value;
+
+      studioTitle.textContent = info.title;
+      artLayer.innerHTML = "";
+
+      if (selectedStyle === "robot") drawRobot(colors, strokeWidth, alpha);
+      if (selectedStyle === "fox") drawFox(colors, strokeWidth, alpha);
+      if (selectedStyle === "orb") drawOrb(colors, strokeWidth, alpha);
+      if (selectedStyle === "ship") drawShip(colors, strokeWidth, alpha);
+
+      renderPixels(colors, selectedStyle, scale);
+      renderLayers(info.title, colors);
+      cube.style.transform = `rotateX(-22deg) rotateY(${rot}deg)`;
+
+      const paletteText = `${colors.primary}, ${colors.secondary}, ${colors.accent}, ${colors.dark}, ${colors.light}`;
+
+      manifestCode.textContent = `PROJECT: 2D/3D digital media AI research demo
+ASSET NAME: ${info.exportName}
+ASSET TITLE: ${info.title}
+VISUAL TYPE: ${info.shape}
+
+SOURCE LAYERS:
+- Vector_Base: scalable shape construction
+- Stroke_System: editable outline and silhouette definition
+- Raster_Shadow: non-destructive polish layer
+- Brush_Highlight: paint/texture pass
+- Pixel_Preview: small-size readability check
+- 3D_Blockout: low-poly form reference
+
+STYLE PARAMETERS:
+- Palette: ${selectedPalette}
+- Palette values: ${paletteText}
+- Brush opacity: ${opacity.value}%
+- Vector stroke: ${stroke.value}px
+- Pixel sprite scale: ${spriteScale.value}x
+- 3D rotation preview: ${rotation.value} degrees
+
+EXPORT TARGETS:
+- SVG: editable vector source
+- PNG: transparent raster export
+- Sprite PNG: small icon/game asset preview
+- GLB concept: 3D blockout reference
+- Godot notes: sprite/icon handoff metadata
+
+QA STATUS:
+Ready for reviewer pass.`;
+    }
+
+    [assetStyle, palette, opacity, stroke, spriteScale, rotation].forEach((control) => {
+      control.addEventListener("input", render);
+      control.addEventListener("change", render);
+    });
+
+    document.getElementById("copyManifest").addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(manifestCode.textContent);
+        document.getElementById("copyManifest").textContent = "Copied";
+        setTimeout(() => {
+          document.getElementById("copyManifest").textContent = "Copy manifest";
+        }, 1400);
+      } catch (error) {
+        alert("Copy failed. You can still select the code manually.");
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>
