@@ -70,7 +70,9 @@
       flex-wrap: wrap;
     }
 
-    .nav-links a {
+    .nav-links a,
+    .nav-links a:link,
+    .nav-links a:visited {
       color: #dbeafe;
     }
 
@@ -240,6 +242,7 @@
     .tag {
       border: 1px solid var(--line);
       background: white;
+      color: #111827;
       border-radius: 999px;
       padding: 8px 12px;
       font-size: 0.9rem;
@@ -259,6 +262,7 @@
       background: #f8fafc;
       padding: 16px 18px;
       border-radius: 14px;
+      color: #1f2937;
     }
 
     .button-row {
@@ -268,20 +272,46 @@
       margin-top: 18px;
     }
 
-    button, .button {
-      border: 0;
+    button,
+    .button,
+    a.button,
+    a.button:link,
+    a.button:visited {
+      appearance: none;
+      border: 1px solid var(--accent);
       background: var(--accent);
-      color: white;
+      color: #ffffff;
       border-radius: 999px;
       padding: 11px 15px;
       font-weight: 800;
       cursor: pointer;
       display: inline-block;
+      text-decoration: none;
+      line-height: 1.2;
     }
 
-    .button.secondary {
-      background: #e0e7ff;
+    button:hover,
+    .button:hover,
+    a.button:hover {
+      filter: brightness(0.96);
+      text-decoration: none;
+    }
+
+    .button.secondary,
+    a.button.secondary,
+    a.button.secondary:link,
+    a.button.secondary:visited {
+      background: #ffffff;
       color: #1e3a8a;
+      border: 1px solid #93c5fd;
+      text-decoration: none;
+    }
+
+    .button.secondary:hover,
+    a.button.secondary:hover {
+      background: #dbeafe;
+      color: #0f172a;
+      text-decoration: none;
     }
 
     footer {
@@ -396,7 +426,7 @@
         </p>
         <pre><code id="scadCode"></code></pre>
         <div class="button-row">
-          <button id="copyScad">Copy OpenSCAD script</button>
+          <button id="copyScad" type="button">Copy OpenSCAD script</button>
           <a class="button secondary" href="#review">Review checklist</a>
         </div>
       </div>
@@ -505,8 +535,8 @@ Layer: CONSTRUCTION</code></pre>
 
     function addText(x, y, value, anchor = "middle") {
       const text = svgEl("text", {
-        x,
-        y,
+        x: x,
+        y: y,
         "text-anchor": anchor,
         class: "dim-text"
       });
@@ -536,8 +566,8 @@ Layer: CONSTRUCTION</code></pre>
       drawing.innerHTML = "";
 
       const bracket = svgEl("rect", {
-        x,
-        y,
+        x: x,
+        y: y,
         width: w,
         height: h,
         rx: radius,
@@ -547,16 +577,18 @@ Layer: CONSTRUCTION</code></pre>
 
       const leftHole = svgEl("circle", {
         cx: cx - spacing / 2,
-        cy,
+        cy: cy,
         r: holeR,
         class: "cut"
       });
+
       const rightHole = svgEl("circle", {
         cx: cx + spacing / 2,
-        cy,
+        cy: cy,
         r: holeR,
         class: "cut"
       });
+
       drawing.appendChild(leftHole);
       drawing.appendChild(rightHole);
 
@@ -595,8 +627,8 @@ Layer: CONSTRUCTION</code></pre>
       }));
       addText(cx, y - 48, `hole spacing ${p.spacing} mm`);
 
-      addText(cx - spacing / 2, cy + holeR + 26, `Ø${p.hole}`);
-      addText(cx + spacing / 2, cy + holeR + 26, `Ø${p.hole}`);
+      addText(cx - spacing / 2, cy + holeR + 26, `diameter ${p.hole} mm`);
+      addText(cx + spacing / 2, cy + holeR + 26, `diameter ${p.hole} mm`);
 
       scadCode.textContent = `// Parametric mounting bracket demo
 // Units: millimeters
