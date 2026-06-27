@@ -1,0 +1,814 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Electronics Design and Simulation EDA AI Research Demo | Stanley Chatman</title>
+  <meta name="description" content="Interactive electronics design and simulation demo showing schematic capture, RC filter simulation, SPICE netlist generation, PCB preview, and EDA QA checks." />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #5b6472;
+      --line: #e5e7eb;
+      --accent: #ea580c;
+      --accent-dark: #9a3412;
+      --soft: #fff7ed;
+      --code: #020617;
+      --board: #0f766e;
+      --trace: #fbbf24;
+      --copper: #f97316;
+      --component: #1e293b;
+      --signal: #2563eb;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background: #f8fafc;
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--accent-dark);
+      font-weight: 750;
+      text-decoration: none;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    header {
+      color: white;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(234, 88, 12, 0.52), transparent 30%),
+        linear-gradient(135deg, #020617 0%, #431407 58%, #7c2d12 100%);
+      padding: 24px;
+    }
+
+    nav {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand { font-weight: 850; letter-spacing: 0.01em; }
+
+    .nav-links { display: flex; gap: 16px; flex-wrap: wrap; }
+
+    .nav-links a,
+    .nav-links a:link,
+    .nav-links a:visited { color: #ffedd5; }
+
+    .hero {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 72px 0 86px;
+    }
+
+    .eyebrow {
+      color: #fed7aa;
+      font-size: 0.78rem;
+      font-weight: 850;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin: 0 0 10px;
+    }
+
+    h1 {
+      max-width: 1000px;
+      font-size: clamp(2.2rem, 5vw, 4.7rem);
+      line-height: 1.02;
+      margin: 0;
+    }
+
+    .hero p.summary {
+      max-width: 860px;
+      color: #e5e7eb;
+      font-size: 1.12rem;
+      margin: 24px 0 0;
+    }
+
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 54px 24px 90px;
+    }
+
+    section { margin: 0 0 34px; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 0.82fr 1.18fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: clamp(1.6rem, 3vw, 2.35rem);
+      line-height: 1.1;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 1.18rem;
+    }
+
+    p { color: var(--muted); }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .tag {
+      border: 1px solid var(--line);
+      background: white;
+      color: #111827;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      font-weight: 750;
+    }
+
+    .controls { display: grid; gap: 16px; }
+
+    label {
+      display: grid;
+      gap: 6px;
+      font-weight: 750;
+      color: #1f2937;
+    }
+
+    input[type="range"],
+    select { width: 100%; }
+
+    select {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #ffffff;
+      color: #111827;
+      font-weight: 700;
+    }
+
+    .value { color: var(--accent-dark); font-weight: 850; }
+
+    .eda-shell {
+      background: #020617;
+      border-radius: 20px;
+      padding: 16px;
+      color: #e5e7eb;
+    }
+
+    .eda-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .eda-title { font-weight: 850; color: #ffffff; }
+
+    .eda-meta {
+      color: #fed7aa;
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 1fr 0.95fr;
+      gap: 14px;
+    }
+
+    .panel {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+      padding: 14px;
+      overflow: hidden;
+    }
+
+    .panel h3 {
+      color: #ffffff;
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+
+    svg {
+      width: 100%;
+      display: block;
+      border-radius: 12px;
+      background: #f8fafc;
+    }
+
+    .schematic-wire {
+      fill: none;
+      stroke: #0f172a;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .schematic-symbol {
+      fill: none;
+      stroke: #0f172a;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .schematic-text {
+      fill: #111827;
+      font-weight: 850;
+      font-size: 14px;
+    }
+
+    .schematic-small {
+      fill: #334155;
+      font-weight: 750;
+      font-size: 12px;
+    }
+
+    .plot-line {
+      fill: none;
+      stroke: var(--signal);
+      stroke-width: 4;
+      stroke-linecap: round;
+    }
+
+    .axis {
+      stroke: #334155;
+      stroke-width: 2;
+    }
+
+    .gridline {
+      stroke: #cbd5e1;
+      stroke-width: 1;
+    }
+
+    .pcb-board {
+      fill: var(--board);
+      stroke: #064e3b;
+      stroke-width: 3;
+    }
+
+    .pcb-trace {
+      fill: none;
+      stroke: var(--trace);
+      stroke-width: 9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .pad {
+      fill: var(--copper);
+      stroke: #ffedd5;
+      stroke-width: 2;
+    }
+
+    .chip {
+      fill: #111827;
+      stroke: #94a3b8;
+      stroke-width: 2;
+    }
+
+    .silk {
+      fill: #ffffff;
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .metric {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .metric-name {
+      color: #cbd5e1;
+      font-size: 0.78rem;
+      font-weight: 850;
+    }
+
+    .metric-value {
+      color: #ffffff;
+      font-size: 1.25rem;
+      font-weight: 900;
+      margin-top: 2px;
+    }
+
+    pre {
+      margin: 0;
+      background: var(--code);
+      color: #e5e7eb;
+      border-radius: 18px;
+      padding: 18px;
+      overflow-x: auto;
+      font-size: 0.93rem;
+      line-height: 1.55;
+    }
+
+    code { font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace; }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    button,
+    .button,
+    a.button,
+    a.button:link,
+    a.button:visited {
+      appearance: none;
+      border: 1px solid var(--accent);
+      background: var(--accent);
+      color: #ffffff;
+      border-radius: 999px;
+      padding: 11px 15px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-block;
+      text-decoration: none;
+      line-height: 1.2;
+    }
+
+    button:hover,
+    .button:hover,
+    a.button:hover {
+      filter: brightness(0.96);
+      text-decoration: none;
+    }
+
+    .button.secondary,
+    a.button.secondary,
+    a.button.secondary:link,
+    a.button.secondary:visited {
+      background: #ffffff;
+      color: #9a3412;
+      border: 1px solid #fdba74;
+      text-decoration: none;
+    }
+
+    .button.secondary:hover,
+    a.button.secondary:hover {
+      background: #ffedd5;
+      color: #111827;
+      text-decoration: none;
+    }
+
+    .note {
+      border-left: 5px solid var(--accent);
+      background: #fff7ed;
+      padding: 16px 18px;
+      border-radius: 14px;
+      color: #1f2937;
+    }
+
+    ul { margin-bottom: 0; }
+    li { margin-bottom: 8px; }
+
+    footer {
+      text-align: center;
+      color: #64748b;
+      padding: 22px 24px 52px;
+    }
+
+    @media (max-width: 980px) {
+      .grid,
+      .two-col,
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .hero { padding: 52px 0 66px; }
+
+      .metrics { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="brand">Stanley Chatman</div>
+      <div class="nav-links">
+        <a href="./">Back to Portfolio</a>
+        <a href="https://github.com/stanchat">GitHub</a>
+        <a href="https://www.linkedin.com/in/stanchatman/">LinkedIn</a>
+      </div>
+    </nav>
+
+    <div class="hero">
+      <p class="eyebrow">Electronics Design / Simulation / AI Research Demo</p>
+      <h1>Interactive EDA workflow sample for schematic, simulation, and PCB review.</h1>
+      <p class="summary">
+        This demo shows how a small electronics design can be captured, simulated, documented,
+        and reviewed for an AI-assisted EDA workflow. It combines schematic thinking,
+        RC filter simulation, generated SPICE netlists, PCB layout preview, and QA checks.
+      </p>
+      <div class="tag-row">
+        <span class="tag">KiCAD-style schematic</span>
+        <span class="tag">Ngspice / LTspice netlist</span>
+        <span class="tag">Qucs-S-style simulation</span>
+        <span class="tag">LibrePCB / DesignSpark PCB review</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="card">
+      <p class="eyebrow">Live EDA workflow</p>
+      <h2>RC low-pass filter design review</h2>
+      <p>
+        Adjust the component values below. The schematic labels, simulation curve,
+        cutoff frequency, generated SPICE netlist, and PCB preview update together.
+      </p>
+
+      <div class="grid">
+        <div class="controls">
+          <label>
+            Circuit preset
+            <select id="preset">
+              <option value="audio">Audio smoothing filter</option>
+              <option value="sensor">Sensor noise filter</option>
+              <option value="pwm">PWM output filter</option>
+              <option value="demo">General RC demo</option>
+            </select>
+          </label>
+
+          <label>
+            Resistor R1: <span class="value"><span id="resistorValue">10</span> kΩ</span>
+            <input id="resistor" type="range" min="1" max="100" value="10" step="1" />
+          </label>
+
+          <label>
+            Capacitor C1: <span class="value"><span id="capacitorValue">100</span> nF</span>
+            <input id="capacitor" type="range" min="10" max="1000" value="100" step="10" />
+          </label>
+
+          <label>
+            Input amplitude: <span class="value"><span id="amplitudeValue">5</span> V</span>
+            <input id="amplitude" type="range" min="1" max="12" value="5" step="1" />
+          </label>
+
+          <label>
+            PCB trace width: <span class="value"><span id="traceValue">0.40</span> mm</span>
+            <input id="trace" type="range" min="20" max="120" value="40" step="5" />
+          </label>
+
+          <div class="note">
+            EDA intent: keep schematic symbols readable, document units, generate repeatable simulation input,
+            and review PCB layout assumptions before fabrication.
+          </div>
+        </div>
+
+        <div class="eda-shell">
+          <div class="eda-header">
+            <div class="eda-title" id="edaTitle">Audio Smoothing Filter</div>
+            <div class="eda-meta">Project: RC_FILTER_DEMO · Units: SI</div>
+          </div>
+
+          <div class="workspace">
+            <div class="panel">
+              <h3>Schematic capture</h3>
+              <svg id="schematicSvg" viewBox="0 0 520 320" role="img" aria-label="RC low pass filter schematic">
+                <path class="schematic-wire" d="M55 150 L125 150"></path>
+                <path id="resistorSymbol" class="schematic-symbol" d="M125 150 L140 130 L160 170 L180 130 L200 170 L220 130 L240 170 L255 150"></path>
+                <path class="schematic-wire" d="M255 150 L330 150"></path>
+                <path class="schematic-wire" d="M330 150 L400 150"></path>
+                <path class="schematic-wire" d="M330 150 L330 205"></path>
+                <path class="schematic-symbol" d="M300 205 L360 205 M300 225 L360 225"></path>
+                <path class="schematic-wire" d="M330 225 L330 265 L210 265 L210 250"></path>
+                <path class="schematic-symbol" d="M185 250 L235 250 M195 265 L225 265 M205 280 L215 280"></path>
+                <circle cx="55" cy="150" r="8" fill="#2563eb"></circle>
+                <circle cx="400" cy="150" r="8" fill="#16a34a"></circle>
+                <text class="schematic-text" x="38" y="130">VIN</text>
+                <text class="schematic-text" x="385" y="130">VOUT</text>
+                <text class="schematic-text" x="172" y="105" id="rLabel">R1 10k</text>
+                <text class="schematic-text" x="365" y="223" id="cLabel">C1 100n</text>
+                <text class="schematic-small" x="135" y="292">RC low-pass filter demo</text>
+              </svg>
+            </div>
+
+            <div class="panel">
+              <h3>AC response plot</h3>
+              <svg id="plotSvg" viewBox="0 0 520 320" role="img" aria-label="Frequency response plot">
+                <rect x="0" y="0" width="520" height="320" fill="#f8fafc"></rect>
+                <line class="gridline" x1="70" y1="70" x2="470" y2="70"></line>
+                <line class="gridline" x1="70" y1="130" x2="470" y2="130"></line>
+                <line class="gridline" x1="70" y1="190" x2="470" y2="190"></line>
+                <line class="gridline" x1="70" y1="250" x2="470" y2="250"></line>
+                <line class="axis" x1="70" y1="250" x2="470" y2="250"></line>
+                <line class="axis" x1="70" y1="50" x2="70" y2="250"></line>
+                <path id="responsePath" class="plot-line" d=""></path>
+                <line id="cutoffLine" x1="220" y1="50" x2="220" y2="250" stroke="#ea580c" stroke-width="3" stroke-dasharray="7 7"></line>
+                <text class="schematic-small" x="76" y="42">Gain</text>
+                <text class="schematic-small" x="420" y="280">Frequency</text>
+                <text class="schematic-text" x="250" y="42" id="cutoffLabel">fc ≈ 159 Hz</text>
+                <text class="schematic-small" x="32" y="75">0 dB</text>
+                <text class="schematic-small" x="26" y="135">-3 dB</text>
+                <text class="schematic-small" x="20" y="195">-12 dB</text>
+              </svg>
+            </div>
+          </div>
+
+          <div class="metrics">
+            <div class="metric">
+              <div class="metric-name">CUTOFF</div>
+              <div class="metric-value" id="cutoffMetric">159 Hz</div>
+            </div>
+            <div class="metric">
+              <div class="metric-name">TIME CONSTANT</div>
+              <div class="metric-value" id="tauMetric">1.00 ms</div>
+            </div>
+            <div class="metric">
+              <div class="metric-name">TRACE WIDTH</div>
+              <div class="metric-value" id="traceMetric">0.40 mm</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="two-col">
+      <div class="card">
+        <p class="eyebrow">Generated simulation input</p>
+        <h2>Ngspice / LTspice-style netlist</h2>
+        <p>
+          This SPICE-style netlist documents the simulated circuit and gives reviewers a repeatable
+          representation of the component values and analysis setup.
+        </p>
+        <pre><code id="spiceCode"></code></pre>
+        <div class="button-row">
+          <button id="copySpice" type="button">Copy netlist</button>
+          <a class="button secondary" href="#review">Review checklist</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="eyebrow">PCB layout preview</p>
+        <h2>LibrePCB / KiCAD-style board concept</h2>
+        <p>
+          This simplified PCB view shows component placement, pads, trace routing, labels,
+          and layout review considerations.
+        </p>
+        <svg id="pcbSvg" viewBox="0 0 520 330" role="img" aria-label="PCB layout preview">
+          <rect class="pcb-board" x="60" y="45" width="400" height="240" rx="18"></rect>
+          <path id="pcbTrace1" class="pcb-trace" d="M112 160 L195 160 L280 160 L395 160"></path>
+          <path id="pcbTrace2" class="pcb-trace" d="M280 160 L280 225 L342 225"></path>
+
+          <circle class="pad" cx="112" cy="160" r="15"></circle>
+          <circle class="pad" cx="195" cy="160" r="15"></circle>
+          <circle class="pad" cx="280" cy="160" r="15"></circle>
+          <circle class="pad" cx="395" cy="160" r="15"></circle>
+          <circle class="pad" cx="280" cy="225" r="15"></circle>
+          <circle class="pad" cx="342" cy="225" r="15"></circle>
+
+          <rect class="chip" x="160" y="132" width="70" height="56" rx="8"></rect>
+          <rect class="chip" x="312" y="198" width="62" height="54" rx="8"></rect>
+
+          <text class="silk" x="92" y="125">VIN</text>
+          <text class="silk" x="376" y="125">VOUT</text>
+          <text class="silk" x="173" y="166">R1</text>
+          <text class="silk" x="325" y="232">C1</text>
+          <text class="silk" x="80" y="265">RC_FILTER_DEMO</text>
+        </svg>
+      </div>
+    </section>
+
+    <section id="review" class="card">
+      <p class="eyebrow">Quality review</p>
+      <h2>EDA asset review checklist</h2>
+      <p>
+        This review structure helps an AI research workflow evaluate whether an electronics design
+        asset is understandable, simulated, documented, and ready for deeper engineering review.
+      </p>
+
+      <div class="two-col">
+        <div>
+          <h3>Schematic and simulation checks</h3>
+          <ul>
+            <li>Component references and values are visible and consistent.</li>
+            <li>Units are documented for resistance, capacitance, voltage, and frequency.</li>
+            <li>SPICE netlist matches the schematic topology.</li>
+            <li>Analysis type and frequency sweep are explicitly listed.</li>
+            <li>Cutoff frequency and time constant are calculated from the component values.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3>PCB and handoff checks</h3>
+          <ul>
+            <li>Input, output, and ground are labeled.</li>
+            <li>Trace width is documented as a design parameter.</li>
+            <li>Component placement is readable and easy to inspect.</li>
+            <li>Board concept separates schematic intent from layout assumptions.</li>
+            <li>Review notes clearly state that this is a demo asset, not a fabrication release.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <p class="eyebrow">How this maps to the survey tools</p>
+      <h2>Relevant EDA tool patterns represented</h2>
+      <ul>
+        <li><strong>KiCAD:</strong> schematic capture, component labeling, PCB layout preview, and board review workflow.</li>
+        <li><strong>LibrePCB:</strong> component placement, board concept organization, and layout handoff thinking.</li>
+        <li><strong>Ngspice / LTspice:</strong> SPICE-style netlist generation, AC sweep, and circuit response analysis.</li>
+        <li><strong>Qucs-S:</strong> simulation setup, parameter-driven component values, and result interpretation.</li>
+        <li><strong>DesignSpark:</strong> practical electronics design review, schematic-to-layout reasoning, and export planning.</li>
+        <li><strong>AI research workflow:</strong> structured metadata, reproducible analysis, and reviewer-ready notes.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>Electronics Design and Simulation EDA AI Research Demo · Stanley Chatman</p>
+  </footer>
+
+  <script>
+    const preset = document.getElementById("preset");
+    const resistor = document.getElementById("resistor");
+    const capacitor = document.getElementById("capacitor");
+    const amplitude = document.getElementById("amplitude");
+    const trace = document.getElementById("trace");
+
+    const resistorValue = document.getElementById("resistorValue");
+    const capacitorValue = document.getElementById("capacitorValue");
+    const amplitudeValue = document.getElementById("amplitudeValue");
+    const traceValue = document.getElementById("traceValue");
+
+    const edaTitle = document.getElementById("edaTitle");
+    const rLabel = document.getElementById("rLabel");
+    const cLabel = document.getElementById("cLabel");
+    const cutoffLabel = document.getElementById("cutoffLabel");
+    const cutoffMetric = document.getElementById("cutoffMetric");
+    const tauMetric = document.getElementById("tauMetric");
+    const traceMetric = document.getElementById("traceMetric");
+    const responsePath = document.getElementById("responsePath");
+    const cutoffLine = document.getElementById("cutoffLine");
+    const pcbTrace1 = document.getElementById("pcbTrace1");
+    const pcbTrace2 = document.getElementById("pcbTrace2");
+    const spiceCode = document.getElementById("spiceCode");
+
+    const presetMap = {
+      audio: { title: "Audio Smoothing Filter", purpose: "Smooth an audio/control signal and reduce high-frequency noise." },
+      sensor: { title: "Sensor Noise Filter", purpose: "Reduce sensor noise before ADC sampling." },
+      pwm: { title: "PWM Output Filter", purpose: "Convert a PWM-like signal into a smoother analog output." },
+      demo: { title: "General RC Demo", purpose: "Demonstrate first-order RC low-pass behavior." }
+    };
+
+    function formatHz(value) {
+      if (value >= 1000) return (value / 1000).toFixed(value >= 10000 ? 1 : 2) + " kHz";
+      return Math.round(value) + " Hz";
+    }
+
+    function formatTau(seconds) {
+      if (seconds >= 1) return seconds.toFixed(2) + " s";
+      if (seconds >= 0.001) return (seconds * 1000).toFixed(2) + " ms";
+      return (seconds * 1000000).toFixed(1) + " µs";
+    }
+
+    function renderResponsePath(fc) {
+      const points = [];
+      const minF = 10;
+      const maxF = 100000;
+      const x0 = 70;
+      const y0 = 250;
+      const width = 400;
+      const height = 185;
+
+      for (let i = 0; i <= 80; i++) {
+        const t = i / 80;
+        const f = minF * Math.pow(maxF / minF, t);
+        const gain = 1 / Math.sqrt(1 + Math.pow(f / fc, 2));
+        const db = 20 * Math.log10(gain);
+        const clampedDb = Math.max(-30, Math.min(0, db));
+        const x = x0 + t * width;
+        const y = y0 - ((clampedDb + 30) / 30) * height;
+        points.push(`${i === 0 ? "M" : "L"}${x.toFixed(1)} ${y.toFixed(1)}`);
+      }
+
+      responsePath.setAttribute("d", points.join(" "));
+
+      const logMin = Math.log10(minF);
+      const logMax = Math.log10(maxF);
+      const cutoffT = (Math.log10(fc) - logMin) / (logMax - logMin);
+      const cutoffX = x0 + Math.max(0, Math.min(1, cutoffT)) * width;
+      cutoffLine.setAttribute("x1", cutoffX);
+      cutoffLine.setAttribute("x2", cutoffX);
+    }
+
+    function render() {
+      const rK = Number(resistor.value);
+      const cN = Number(capacitor.value);
+      const vIn = Number(amplitude.value);
+      const traceMm = Number(trace.value) / 100;
+      const rOhms = rK * 1000;
+      const cFarads = cN * 1e-9;
+      const tau = rOhms * cFarads;
+      const fc = 1 / (2 * Math.PI * tau);
+      const selected = presetMap[preset.value];
+
+      resistorValue.textContent = rK;
+      capacitorValue.textContent = cN;
+      amplitudeValue.textContent = vIn;
+      traceValue.textContent = traceMm.toFixed(2);
+
+      edaTitle.textContent = selected.title;
+      rLabel.textContent = `R1 ${rK}k`;
+      cLabel.textContent = `C1 ${cN}n`;
+      cutoffLabel.textContent = `fc ≈ ${formatHz(fc)}`;
+      cutoffMetric.textContent = formatHz(fc);
+      tauMetric.textContent = formatTau(tau);
+      traceMetric.textContent = traceMm.toFixed(2) + " mm";
+
+      renderResponsePath(fc);
+
+      const traceWidth = Math.max(4, Math.min(18, traceMm * 18));
+      pcbTrace1.setAttribute("stroke-width", traceWidth);
+      pcbTrace2.setAttribute("stroke-width", traceWidth);
+
+      spiceCode.textContent = `* RC low-pass filter demo
+* Purpose: ${selected.purpose}
+* Units: Ohms, Farads, Volts, Hertz
+
+Vin in 0 AC ${vIn}
+R1 in out ${rOhms}
+C1 out 0 ${cFarads}
+
+* First-order cutoff estimate:
+* tau = R*C = ${tau.toExponential(4)} seconds
+* fc = 1 / (2*pi*R*C) = ${fc.toFixed(2)} Hz
+
+.ac dec 40 10 100k
+.print ac v(out)
+.end
+
+* Review notes:
+* - Schematic topology: VIN -> R1 -> VOUT, C1 from VOUT to GND.
+* - Component values match the schematic labels.
+* - PCB trace width parameter: ${traceMm.toFixed(2)} mm.
+* - Demo asset only; not released for fabrication.`;
+    }
+
+    [preset, resistor, capacitor, amplitude, trace].forEach((control) => {
+      control.addEventListener("input", render);
+      control.addEventListener("change", render);
+    });
+
+    document.getElementById("copySpice").addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(spiceCode.textContent);
+        document.getElementById("copySpice").textContent = "Copied";
+        setTimeout(() => {
+          document.getElementById("copySpice").textContent = "Copy netlist";
+        }, 1400);
+      } catch (error) {
+        alert("Copy failed. You can still select the code manually.");
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>
