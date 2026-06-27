@@ -1,0 +1,826 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Audio and Video Production AI Research Demo | Stanley Chatman</title>
+  <meta name="description" content="Interactive audio/video production demo showing timeline editing, audio mix controls, EDL generation, and AI research workflow review checks." />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #5b6472;
+      --line: #e5e7eb;
+      --accent: #7c3aed;
+      --accent-dark: #5b21b6;
+      --soft: #f5f3ff;
+      --code: #020617;
+      --video: #111827;
+      --audio: #0f766e;
+      --music: #b45309;
+      --voice: #2563eb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background: #f8fafc;
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--accent-dark);
+      font-weight: 750;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    header {
+      color: white;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(124, 58, 237, 0.52), transparent 30%),
+        linear-gradient(135deg, #020617 0%, #111827 56%, #312e81 100%);
+      padding: 24px;
+    }
+
+    nav {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      font-weight: 850;
+      letter-spacing: 0.01em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a,
+    .nav-links a:link,
+    .nav-links a:visited {
+      color: #ede9fe;
+    }
+
+    .hero {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 72px 0 86px;
+    }
+
+    .eyebrow {
+      color: #c4b5fd;
+      font-size: 0.78rem;
+      font-weight: 850;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin: 0 0 10px;
+    }
+
+    h1 {
+      max-width: 980px;
+      font-size: clamp(2.2rem, 5vw, 4.7rem);
+      line-height: 1.02;
+      margin: 0;
+    }
+
+    .hero p.summary {
+      max-width: 820px;
+      color: #e5e7eb;
+      font-size: 1.12rem;
+      margin: 24px 0 0;
+    }
+
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 54px 24px 90px;
+    }
+
+    section {
+      margin: 0 0 34px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 0.82fr 1.18fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: clamp(1.6rem, 3vw, 2.35rem);
+      line-height: 1.1;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 1.18rem;
+    }
+
+    p {
+      color: var(--muted);
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .tag {
+      border: 1px solid var(--line);
+      background: white;
+      color: #111827;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      font-weight: 750;
+    }
+
+    .controls {
+      display: grid;
+      gap: 16px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      font-weight: 750;
+      color: #1f2937;
+    }
+
+    input[type="range"],
+    select {
+      width: 100%;
+    }
+
+    select {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #ffffff;
+      color: #111827;
+      font-weight: 700;
+    }
+
+    .value {
+      color: var(--accent-dark);
+      font-weight: 850;
+    }
+
+    .preview {
+      background: #020617;
+      border-radius: 20px;
+      padding: 16px;
+      color: #e5e7eb;
+      min-height: 360px;
+    }
+
+    .video-frame {
+      position: relative;
+      height: 230px;
+      border-radius: 16px;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(124, 58, 237, 0.45), transparent 45%),
+        linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+      border: 1px solid rgba(255,255,255,0.16);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 18px;
+    }
+
+    .video-frame::before {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border: 1px dashed rgba(255,255,255,0.28);
+      border-radius: 12px;
+      pointer-events: none;
+    }
+
+    .scene-title {
+      font-size: clamp(1.5rem, 3vw, 2.7rem);
+      line-height: 1.05;
+      font-weight: 900;
+      max-width: 620px;
+      z-index: 1;
+    }
+
+    .lower-third {
+      position: absolute;
+      left: 22px;
+      bottom: 22px;
+      right: 22px;
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 12px;
+      padding: 10px 12px;
+      text-align: left;
+      z-index: 2;
+    }
+
+    .lower-third strong {
+      display: block;
+      color: #ffffff;
+    }
+
+    .lower-third span {
+      color: #cbd5e1;
+      font-size: 0.9rem;
+    }
+
+    .meters {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .meter {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .meter-name {
+      color: #cbd5e1;
+      font-size: 0.82rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .bar {
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.14);
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      width: 50%;
+      border-radius: 999px;
+      background: #a78bfa;
+    }
+
+    .timeline {
+      margin-top: 22px;
+      background: #111827;
+      border-radius: 18px;
+      padding: 16px;
+      border: 1px solid #1f2937;
+      overflow-x: auto;
+    }
+
+    .track {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 10px;
+      min-width: 760px;
+    }
+
+    .track:last-child {
+      margin-bottom: 0;
+    }
+
+    .track-label {
+      color: #e5e7eb;
+      font-size: 0.82rem;
+      font-weight: 850;
+      text-align: right;
+    }
+
+    .track-lane {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      height: 32px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 10px;
+      padding: 5px;
+    }
+
+    .clip {
+      height: 22px;
+      border-radius: 7px;
+      color: white;
+      display: grid;
+      place-items: center;
+      font-size: 0.72rem;
+      font-weight: 850;
+      white-space: nowrap;
+      padding: 0 8px;
+      overflow: hidden;
+    }
+
+    .clip.video { background: var(--accent-dark); }
+    .clip.voice { background: var(--voice); }
+    .clip.music { background: var(--music); }
+    .clip.fx { background: var(--audio); }
+
+    .playhead {
+      height: 6px;
+      border-radius: 999px;
+      background: #c4b5fd;
+      margin: 12px 0 2px 102px;
+      width: 120px;
+      transition: width 0.2s ease;
+    }
+
+    pre {
+      margin: 0;
+      background: var(--code);
+      color: #e5e7eb;
+      border-radius: 18px;
+      padding: 18px;
+      overflow-x: auto;
+      font-size: 0.93rem;
+      line-height: 1.55;
+    }
+
+    code {
+      font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    button,
+    .button,
+    a.button,
+    a.button:link,
+    a.button:visited {
+      appearance: none;
+      border: 1px solid var(--accent);
+      background: var(--accent);
+      color: #ffffff;
+      border-radius: 999px;
+      padding: 11px 15px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-block;
+      text-decoration: none;
+      line-height: 1.2;
+    }
+
+    button:hover,
+    .button:hover,
+    a.button:hover {
+      filter: brightness(0.96);
+      text-decoration: none;
+    }
+
+    .button.secondary,
+    a.button.secondary,
+    a.button.secondary:link,
+    a.button.secondary:visited {
+      background: #ffffff;
+      color: #4c1d95;
+      border: 1px solid #c4b5fd;
+      text-decoration: none;
+    }
+
+    .button.secondary:hover,
+    a.button.secondary:hover {
+      background: #ede9fe;
+      color: #111827;
+      text-decoration: none;
+    }
+
+    .note {
+      border-left: 5px solid var(--accent);
+      background: #faf5ff;
+      padding: 16px 18px;
+      border-radius: 14px;
+      color: #1f2937;
+    }
+
+    ul {
+      margin-bottom: 0;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    footer {
+      text-align: center;
+      color: #64748b;
+      padding: 22px 24px 52px;
+    }
+
+    @media (max-width: 900px) {
+      .grid,
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 52px 0 66px;
+      }
+
+      .meters {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="brand">Stanley Chatman</div>
+      <div class="nav-links">
+        <a href="./">Back to Portfolio</a>
+        <a href="https://github.com/stanchat">GitHub</a>
+        <a href="https://www.linkedin.com/in/stanchatman/">LinkedIn</a>
+      </div>
+    </nav>
+
+    <div class="hero">
+      <p class="eyebrow">Audio / Video Production / AI Research Demo</p>
+      <h1>Interactive editing workflow sample for digital media asset review.</h1>
+      <p class="summary">
+        This demo shows how a short video package can be planned, edited, mixed, documented,
+        and reviewed for an AI-assisted audio/video production workflow. It combines timeline editing,
+        audio balancing, edit decision list generation, and QA checks.
+      </p>
+      <div class="tag-row">
+        <span class="tag">Shotcut / OpenShot-style timeline</span>
+        <span class="tag">Lightworks-style edit decisions</span>
+        <span class="tag">LMMS / Ardour-style audio mix</span>
+        <span class="tag">Digital asset QA</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="card">
+      <p class="eyebrow">Live production sample</p>
+      <h2>Short-form video edit package</h2>
+      <p>
+        Adjust the editorial and audio settings below. The preview, timeline, audio meters,
+        and generated edit decision list update together.
+      </p>
+
+      <div class="grid">
+        <div class="controls">
+          <label>
+            Scene style
+            <select id="sceneStyle">
+              <option value="product">Product explainer</option>
+              <option value="training">Training clip</option>
+              <option value="social">Social media teaser</option>
+              <option value="interview">Interview highlight</option>
+            </select>
+          </label>
+
+          <label>
+            Cut pace: <span class="value"><span id="paceValue">Medium</span></span>
+            <input id="pace" type="range" min="1" max="3" value="2" step="1" />
+          </label>
+
+          <label>
+            Voiceover level: <span class="value"><span id="voiceValue">80</span>%</span>
+            <input id="voice" type="range" min="0" max="100" value="80" step="5" />
+          </label>
+
+          <label>
+            Music bed level: <span class="value"><span id="musicValue">35</span>%</span>
+            <input id="music" type="range" min="0" max="100" value="35" step="5" />
+          </label>
+
+          <label>
+            Sound effects level: <span class="value"><span id="fxValue">45</span>%</span>
+            <input id="fx" type="range" min="0" max="100" value="45" step="5" />
+          </label>
+
+          <div class="note">
+            Production intent: keep speech clear, balance supporting music, document every edit,
+            and provide enough metadata for a reviewer or AI workflow to validate the asset.
+          </div>
+        </div>
+
+        <div class="preview">
+          <div class="video-frame">
+            <div class="scene-title" id="sceneTitle">AI Workflow Demo</div>
+            <div class="lower-third">
+              <strong id="lowerTitle">Digital Asset Review</strong>
+              <span id="lowerSubtitle">Clean edit, balanced mix, documented output</span>
+            </div>
+          </div>
+
+          <div class="meters">
+            <div class="meter">
+              <div class="meter-name">VOICEOVER</div>
+              <div class="bar"><div class="bar-fill" id="voiceMeter"></div></div>
+            </div>
+            <div class="meter">
+              <div class="meter-name">MUSIC</div>
+              <div class="bar"><div class="bar-fill" id="musicMeter"></div></div>
+            </div>
+            <div class="meter">
+              <div class="meter-name">SFX</div>
+              <div class="bar"><div class="bar-fill" id="fxMeter"></div></div>
+            </div>
+          </div>
+
+          <div class="timeline">
+            <div class="track">
+              <div class="track-label">V1 Video</div>
+              <div class="track-lane" id="videoTrack"></div>
+            </div>
+            <div class="track">
+              <div class="track-label">A1 Voice</div>
+              <div class="track-lane" id="voiceTrack"></div>
+            </div>
+            <div class="track">
+              <div class="track-label">A2 Music</div>
+              <div class="track-lane" id="musicTrack"></div>
+            </div>
+            <div class="track">
+              <div class="track-label">A3 SFX</div>
+              <div class="track-lane" id="fxTrack"></div>
+            </div>
+            <div class="playhead" id="playhead"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="two-col">
+      <div class="card">
+        <p class="eyebrow">Generated documentation</p>
+        <h2>Edit decision list</h2>
+        <p>
+          This EDL-style output documents the structure of the edit so another person,
+          tool, or AI reviewer can understand what was assembled.
+        </p>
+        <pre><code id="edlCode"></code></pre>
+        <div class="button-row">
+          <button id="copyEdl" type="button">Copy EDL</button>
+          <a class="button secondary" href="#review">Review checklist</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="eyebrow">Audio session plan</p>
+        <h2>LMMS / Ardour-style track layout</h2>
+        <p>
+          A clean session separates dialogue, music, and sound effects so the mix can be
+          reviewed, adjusted, and exported consistently.
+        </p>
+        <pre><code>Track A1: Voiceover / Dialogue
+Track A2: Music bed
+Track A3: Sound effects
+Track BUS: Master output
+Automation: Duck music under voice
+Export: 1080p H.264 video + AAC audio</code></pre>
+      </div>
+    </section>
+
+    <section id="review" class="card">
+      <p class="eyebrow">Quality review</p>
+      <h2>Digital media asset review checklist</h2>
+      <p>
+        This is the type of review structure that helps an AI research workflow evaluate
+        whether a media asset is usable, consistent, and well documented.
+      </p>
+
+      <div class="two-col">
+        <div>
+          <h3>Video checks</h3>
+          <ul>
+            <li>Timeline has clear video, voice, music, and SFX tracks.</li>
+            <li>Cut pace matches the intended content type and audience.</li>
+            <li>Lower-third text is readable and not covering critical content.</li>
+            <li>Export target is documented for downstream review.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3>Audio checks</h3>
+          <ul>
+            <li>Voiceover remains the loudest and clearest element.</li>
+            <li>Music supports the message without overpowering speech.</li>
+            <li>Sound effects are used intentionally and not overmixed.</li>
+            <li>Track names and mix notes are clear enough for handoff.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <p class="eyebrow">How this maps to the survey tools</p>
+      <h2>Relevant tool patterns represented</h2>
+      <ul>
+        <li><strong>Shotcut / OpenShot:</strong> timeline editing, clip sequencing, track organization, and export planning.</li>
+        <li><strong>Lightworks:</strong> edit decision thinking, pacing, scene selection, and timeline review.</li>
+        <li><strong>LMMS:</strong> music bed, effects layering, and simple mix-level control.</li>
+        <li><strong>Ardour:</strong> multitrack audio session organization, dialogue/music/SFX separation, and mix QA.</li>
+        <li><strong>AI research workflow:</strong> structured metadata, repeatable review criteria, and documented asset decisions.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>Audio and Video Production AI Research Demo · Stanley Chatman</p>
+  </footer>
+
+  <script>
+    const sceneStyle = document.getElementById("sceneStyle");
+    const pace = document.getElementById("pace");
+    const voice = document.getElementById("voice");
+    const music = document.getElementById("music");
+    const fx = document.getElementById("fx");
+
+    const paceValue = document.getElementById("paceValue");
+    const voiceValue = document.getElementById("voiceValue");
+    const musicValue = document.getElementById("musicValue");
+    const fxValue = document.getElementById("fxValue");
+
+    const sceneTitle = document.getElementById("sceneTitle");
+    const lowerTitle = document.getElementById("lowerTitle");
+    const lowerSubtitle = document.getElementById("lowerSubtitle");
+
+    const voiceMeter = document.getElementById("voiceMeter");
+    const musicMeter = document.getElementById("musicMeter");
+    const fxMeter = document.getElementById("fxMeter");
+
+    const videoTrack = document.getElementById("videoTrack");
+    const voiceTrack = document.getElementById("voiceTrack");
+    const musicTrack = document.getElementById("musicTrack");
+    const fxTrack = document.getElementById("fxTrack");
+    const playhead = document.getElementById("playhead");
+
+    const edlCode = document.getElementById("edlCode");
+
+    const sceneMap = {
+      product: {
+        title: "AI Product Explainer",
+        lower: "Workflow Automation",
+        subtitle: "Problem, solution, proof, call to action",
+        clips: ["Hook", "Problem", "Demo", "CTA"]
+      },
+      training: {
+        title: "Training Clip",
+        lower: "Step-by-Step Enablement",
+        subtitle: "Clear narration, screen focus, recap",
+        clips: ["Intro", "Step 1", "Step 2", "Recap"]
+      },
+      social: {
+        title: "Social Teaser",
+        lower: "Fast Short-Form Cut",
+        subtitle: "Hook, motion, captions, payoff",
+        clips: ["Cold open", "Beat 1", "Beat 2", "Payoff"]
+      },
+      interview: {
+        title: "Interview Highlight",
+        lower: "Speaker Moment",
+        subtitle: "Select, trim, caption, polish",
+        clips: ["Question", "Answer", "Cutaway", "Insight"]
+      }
+    };
+
+    function paceName(value) {
+      if (Number(value) === 1) return "Slow";
+      if (Number(value) === 2) return "Medium";
+      return "Fast";
+    }
+
+    function makeClip(label, className, flex) {
+      const div = document.createElement("div");
+      div.className = "clip " + className;
+      div.textContent = label;
+      div.style.flex = String(flex);
+      return div;
+    }
+
+    function renderTrack(track, clips, className, paceLevel) {
+      track.innerHTML = "";
+      const flexMap = paceLevel === 1 ? [1.6, 1.6, 1.7, 1.3] : paceLevel === 2 ? [1.2, 1.4, 1.3, 1.1] : [1, 1, 1, 0.9];
+      clips.forEach((clip, index) => {
+        track.appendChild(makeClip(clip, className, flexMap[index] || 1));
+      });
+    }
+
+    function render() {
+      const style = sceneMap[sceneStyle.value];
+      const paceLevel = Number(pace.value);
+      const paceLabel = paceName(paceLevel);
+      const voiceLevel = Number(voice.value);
+      const musicLevel = Number(music.value);
+      const fxLevel = Number(fx.value);
+
+      paceValue.textContent = paceLabel;
+      voiceValue.textContent = voiceLevel;
+      musicValue.textContent = musicLevel;
+      fxValue.textContent = fxLevel;
+
+      sceneTitle.textContent = style.title;
+      lowerTitle.textContent = style.lower;
+      lowerSubtitle.textContent = style.subtitle;
+
+      voiceMeter.style.width = voiceLevel + "%";
+      musicMeter.style.width = musicLevel + "%";
+      fxMeter.style.width = fxLevel + "%";
+
+      renderTrack(videoTrack, style.clips, "video", paceLevel);
+      renderTrack(voiceTrack, ["VO intro", "VO body", "VO proof", "VO close"], "voice", paceLevel);
+      renderTrack(musicTrack, ["Music bed", "Duck under VO", "Lift", "Outro"], "music", paceLevel);
+      renderTrack(fxTrack, ["Hit", "Whoosh", "Accent", "End sting"], "fx", paceLevel);
+
+      playhead.style.width = paceLevel === 1 ? "90px" : paceLevel === 2 ? "160px" : "240px";
+
+      edlCode.textContent = `PROJECT: Audio/Video AI Research Demo
+FORMAT: 1920x1080 H.264
+AUDIO: AAC stereo, 48kHz
+STYLE: ${style.title}
+CUT PACE: ${paceLabel}
+
+TRACKS:
+V1 - Video clips: ${style.clips.join(" | ")}
+A1 - Voiceover level: ${voiceLevel}%
+A2 - Music bed level: ${musicLevel}%
+A3 - Sound effects level: ${fxLevel}%
+
+EDIT DECISIONS:
+00:00 - 00:03  Opening hook / title card
+00:03 - 00:10  Primary message with voiceover
+00:10 - 00:18  Supporting visual sequence
+00:18 - 00:24  Proof point or key takeaway
+00:24 - 00:30  Closing call-to-action
+
+MIX NOTES:
+- Keep voiceover as the lead audio element.
+- Duck music under narration.
+- Keep SFX short and intentional.
+- Verify final export for clean audio, readable text, and consistent pacing.
+
+QA STATUS:
+Ready for reviewer pass.`;
+    }
+
+    [sceneStyle, pace, voice, music, fx].forEach((control) => {
+      control.addEventListener("input", render);
+      control.addEventListener("change", render);
+    });
+
+    document.getElementById("copyEdl").addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(edlCode.textContent);
+        document.getElementById("copyEdl").textContent = "Copied";
+        setTimeout(() => {
+          document.getElementById("copyEdl").textContent = "Copy EDL";
+        }, 1400);
+      } catch (error) {
+        alert("Copy failed. You can still select the code manually.");
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>
