@@ -1,0 +1,851 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Geospatial Analysis QGIS AI Research Demo | Stanley Chatman</title>
+  <meta name="description" content="Interactive QGIS-style geospatial analysis demo showing layers, buffers, proximity scoring, and GIS review checks." />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #5b6472;
+      --line: #e5e7eb;
+      --accent: #16a34a;
+      --accent-dark: #166534;
+      --soft: #f0fdf4;
+      --code: #020617;
+      --road: #64748b;
+      --water: #38bdf8;
+      --parcel: #22c55e;
+      --risk: #f97316;
+      --site: #7c3aed;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background: #f8fafc;
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--accent-dark);
+      font-weight: 750;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    header {
+      color: white;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(22, 163, 74, 0.52), transparent 30%),
+        linear-gradient(135deg, #020617 0%, #052e16 58%, #064e3b 100%);
+      padding: 24px;
+    }
+
+    nav {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      font-weight: 850;
+      letter-spacing: 0.01em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a,
+    .nav-links a:link,
+    .nav-links a:visited {
+      color: #dcfce7;
+    }
+
+    .hero {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 72px 0 86px;
+    }
+
+    .eyebrow {
+      color: #86efac;
+      font-size: 0.78rem;
+      font-weight: 850;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin: 0 0 10px;
+    }
+
+    h1 {
+      max-width: 980px;
+      font-size: clamp(2.2rem, 5vw, 4.7rem);
+      line-height: 1.02;
+      margin: 0;
+    }
+
+    .hero p.summary {
+      max-width: 820px;
+      color: #e5e7eb;
+      font-size: 1.12rem;
+      margin: 24px 0 0;
+    }
+
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 54px 24px 90px;
+    }
+
+    section {
+      margin: 0 0 34px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 0.82fr 1.18fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: clamp(1.6rem, 3vw, 2.35rem);
+      line-height: 1.1;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 1.18rem;
+    }
+
+    p {
+      color: var(--muted);
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .tag {
+      border: 1px solid var(--line);
+      background: white;
+      color: #111827;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      font-weight: 750;
+    }
+
+    .controls {
+      display: grid;
+      gap: 16px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      font-weight: 750;
+      color: #1f2937;
+    }
+
+    input[type="range"],
+    select {
+      width: 100%;
+    }
+
+    select {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #ffffff;
+      color: #111827;
+      font-weight: 700;
+    }
+
+    .value {
+      color: var(--accent-dark);
+      font-weight: 850;
+    }
+
+    .map-shell {
+      background: #0f172a;
+      border-radius: 20px;
+      padding: 16px;
+      color: #e5e7eb;
+      min-height: 430px;
+    }
+
+    .map-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .map-title {
+      font-weight: 850;
+      color: #ffffff;
+    }
+
+    .coord {
+      color: #bbf7d0;
+      font-size: 0.86rem;
+      font-weight: 750;
+    }
+
+    svg {
+      width: 100%;
+      min-height: 340px;
+      display: block;
+      background: #e0f2fe;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.16);
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.84rem;
+      font-weight: 750;
+      color: #d1d5db;
+    }
+
+    .swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .score-panel {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .score {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .score-name {
+      color: #cbd5e1;
+      font-size: 0.78rem;
+      font-weight: 850;
+    }
+
+    .score-value {
+      color: #ffffff;
+      font-size: 1.35rem;
+      font-weight: 900;
+      margin-top: 2px;
+    }
+
+    .parcel {
+      fill: rgba(34, 197, 94, 0.32);
+      stroke: #15803d;
+      stroke-width: 2;
+    }
+
+    .water {
+      fill: none;
+      stroke: var(--water);
+      stroke-width: 18;
+      stroke-linecap: round;
+      opacity: 0.9;
+    }
+
+    .road {
+      fill: none;
+      stroke: var(--road);
+      stroke-width: 10;
+      stroke-linecap: round;
+    }
+
+    .road-secondary {
+      fill: none;
+      stroke: #94a3b8;
+      stroke-width: 6;
+      stroke-linecap: round;
+    }
+
+    .buffer {
+      fill: rgba(249, 115, 22, 0.22);
+      stroke: #f97316;
+      stroke-width: 3;
+      stroke-dasharray: 9 7;
+    }
+
+    .site-buffer {
+      fill: rgba(124, 58, 237, 0.16);
+      stroke: #7c3aed;
+      stroke-width: 3;
+      stroke-dasharray: 7 6;
+    }
+
+    .site {
+      fill: #7c3aed;
+      stroke: #ffffff;
+      stroke-width: 3;
+    }
+
+    .poi {
+      fill: #ef4444;
+      stroke: #ffffff;
+      stroke-width: 2;
+    }
+
+    .map-label {
+      font-size: 13px;
+      font-weight: 850;
+      fill: #0f172a;
+    }
+
+    .map-small {
+      font-size: 11px;
+      font-weight: 750;
+      fill: #334155;
+    }
+
+    pre {
+      margin: 0;
+      background: var(--code);
+      color: #e5e7eb;
+      border-radius: 18px;
+      padding: 18px;
+      overflow-x: auto;
+      font-size: 0.93rem;
+      line-height: 1.55;
+    }
+
+    code {
+      font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    button,
+    .button,
+    a.button,
+    a.button:link,
+    a.button:visited {
+      appearance: none;
+      border: 1px solid var(--accent);
+      background: var(--accent);
+      color: #ffffff;
+      border-radius: 999px;
+      padding: 11px 15px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-block;
+      text-decoration: none;
+      line-height: 1.2;
+    }
+
+    button:hover,
+    .button:hover,
+    a.button:hover {
+      filter: brightness(0.96);
+      text-decoration: none;
+    }
+
+    .button.secondary,
+    a.button.secondary,
+    a.button.secondary:link,
+    a.button.secondary:visited {
+      background: #ffffff;
+      color: #14532d;
+      border: 1px solid #86efac;
+      text-decoration: none;
+    }
+
+    .button.secondary:hover,
+    a.button.secondary:hover {
+      background: #dcfce7;
+      color: #111827;
+      text-decoration: none;
+    }
+
+    .note {
+      border-left: 5px solid var(--accent);
+      background: #f0fdf4;
+      padding: 16px 18px;
+      border-radius: 14px;
+      color: #1f2937;
+    }
+
+    ul {
+      margin-bottom: 0;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    footer {
+      text-align: center;
+      color: #64748b;
+      padding: 22px 24px 52px;
+    }
+
+    @media (max-width: 900px) {
+      .grid,
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 52px 0 66px;
+      }
+
+      .score-panel {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="brand">Stanley Chatman</div>
+      <div class="nav-links">
+        <a href="./">Back to Portfolio</a>
+        <a href="https://github.com/stanchat">GitHub</a>
+        <a href="https://www.linkedin.com/in/stanchatman/">LinkedIn</a>
+      </div>
+    </nav>
+
+    <div class="hero">
+      <p class="eyebrow">Geospatial Analysis / QGIS / AI Research Demo</p>
+      <h1>Interactive QGIS-style site suitability analysis sample.</h1>
+      <p class="summary">
+        This demo shows how geospatial layers can be organized, filtered, buffered, scored,
+        and documented for an AI-assisted GIS asset review workflow. It combines QGIS-style
+        layer management, proximity analysis, buffer logic, and review-ready metadata.
+      </p>
+      <div class="tag-row">
+        <span class="tag">QGIS-style layers</span>
+        <span class="tag">Buffer analysis</span>
+        <span class="tag">Proximity scoring</span>
+        <span class="tag">GIS QA checklist</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="card">
+      <p class="eyebrow">Live geospatial workflow</p>
+      <h2>Community facility site suitability map</h2>
+      <p>
+        Adjust the analysis parameters below. The map, risk buffers, proximity score,
+        and generated GIS review notes update together.
+      </p>
+
+      <div class="grid">
+        <div class="controls">
+          <label>
+            Analysis scenario
+            <select id="scenario">
+              <option value="clinic">Community clinic access</option>
+              <option value="ev">EV charging location</option>
+              <option value="park">Neighborhood park planning</option>
+              <option value="retail">Small retail site review</option>
+            </select>
+          </label>
+
+          <label>
+            Service radius: <span class="value"><span id="radiusValue">800</span> meters</span>
+            <input id="radius" type="range" min="300" max="1600" value="800" step="100" />
+          </label>
+
+          <label>
+            Flood/risk buffer: <span class="value"><span id="riskValue">250</span> meters</span>
+            <input id="risk" type="range" min="100" max="700" value="250" step="50" />
+          </label>
+
+          <label>
+            Transit priority: <span class="value"><span id="transitValue">60</span>%</span>
+            <input id="transit" type="range" min="0" max="100" value="60" step="5" />
+          </label>
+
+          <label>
+            Population need weight: <span class="value"><span id="needValue">70</span>%</span>
+            <input id="need" type="range" min="0" max="100" value="70" step="5" />
+          </label>
+
+          <div class="note">
+            GIS intent: separate source layers, document assumptions, apply repeatable analysis
+            steps, and produce review notes that another analyst can validate.
+          </div>
+        </div>
+
+        <div class="map-shell">
+          <div class="map-header">
+            <div class="map-title" id="mapTitle">Community Clinic Access</div>
+            <div class="coord">CRS: EPSG:3857 demo view · Units: meters</div>
+          </div>
+
+          <svg id="mapSvg" viewBox="0 0 760 460" role="img" aria-label="QGIS style site suitability map">
+            <rect x="0" y="0" width="760" height="460" fill="#e0f2fe"></rect>
+            <path class="water" d="M55 400 C150 330, 250 360, 330 285 C425 200, 550 240, 700 150"></path>
+            <path class="road" d="M70 100 C210 150, 310 150, 455 105 C565 72, 645 92, 710 120"></path>
+            <path class="road-secondary" d="M150 430 L260 300 L405 230 L610 70"></path>
+            <path class="road-secondary" d="M120 210 L260 240 L455 315 L670 360"></path>
+
+            <polygon class="parcel" points="105,135 235,110 280,205 155,240"></polygon>
+            <polygon class="parcel" points="315,120 445,108 500,215 350,245"></polygon>
+            <polygon class="parcel" points="485,260 640,250 665,370 510,390"></polygon>
+            <polygon class="parcel" points="165,280 300,275 330,385 185,400"></polygon>
+
+            <circle id="riskBuffer" class="buffer" cx="560" cy="315" r="72"></circle>
+            <circle id="siteBuffer" class="site-buffer" cx="380" cy="215" r="120"></circle>
+
+            <circle class="poi" cx="560" cy="315" r="9"></circle>
+            <text class="map-small" x="574" y="319">risk source</text>
+
+            <circle class="poi" cx="250" cy="130" r="8"></circle>
+            <text class="map-small" x="263" y="134">transit</text>
+
+            <circle class="poi" cx="610" cy="92" r="8"></circle>
+            <text class="map-small" x="623" y="96">transit</text>
+
+            <circle id="sitePoint" class="site" cx="380" cy="215" r="12"></circle>
+            <text id="siteLabel" class="map-label" x="398" y="220">candidate site</text>
+
+            <text class="map-small" x="62" y="390">waterway</text>
+            <text class="map-small" x="70" y="92">primary road</text>
+          </svg>
+
+          <div class="legend">
+            <div class="legend-item"><span class="swatch" style="background:#22c55e;"></span> Parcels</div>
+            <div class="legend-item"><span class="swatch" style="background:#38bdf8;"></span> Water</div>
+            <div class="legend-item"><span class="swatch" style="background:#64748b;"></span> Roads</div>
+            <div class="legend-item"><span class="swatch" style="background:#f97316;"></span> Risk buffer</div>
+            <div class="legend-item"><span class="swatch" style="background:#7c3aed;"></span> Candidate site</div>
+          </div>
+
+          <div class="score-panel">
+            <div class="score">
+              <div class="score-name">ACCESS SCORE</div>
+              <div class="score-value" id="accessScore">82</div>
+            </div>
+            <div class="score">
+              <div class="score-name">RISK SCORE</div>
+              <div class="score-value" id="riskScore">71</div>
+            </div>
+            <div class="score">
+              <div class="score-name">OVERALL</div>
+              <div class="score-value" id="overallScore">77</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="two-col">
+      <div class="card">
+        <p class="eyebrow">Generated GIS notes</p>
+        <h2>Processing summary</h2>
+        <p>
+          This QGIS-style processing log documents the layer inputs, assumptions,
+          analysis steps, and review status for handoff.
+        </p>
+        <pre><code id="gisCode"></code></pre>
+        <div class="button-row">
+          <button id="copyGis" type="button">Copy GIS notes</button>
+          <a class="button secondary" href="#review">Review checklist</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="eyebrow">Layer organization</p>
+        <h2>QGIS project structure</h2>
+        <p>
+          A clean geospatial project separates raw source layers, derived analysis layers,
+          symbology, and exports so the workflow can be audited.
+        </p>
+        <pre><code>Group: 00_Source_Data
+  - parcels_demo.geojson
+  - roads_demo.geojson
+  - transit_points_demo.geojson
+  - water_features_demo.geojson
+
+Group: 10_Analysis
+  - service_area_buffer
+  - risk_buffer
+  - candidate_site_score
+
+Group: 20_Outputs
+  - suitability_map
+  - processing_notes
+  - reviewer_checklist</code></pre>
+      </div>
+    </section>
+
+    <section id="review" class="card">
+      <p class="eyebrow">Quality review</p>
+      <h2>Geospatial asset review checklist</h2>
+      <p>
+        This is the kind of structure that helps an AI research workflow evaluate whether
+        a GIS asset is accurate, documented, and usable.
+      </p>
+
+      <div class="two-col">
+        <div>
+          <h3>Spatial checks</h3>
+          <ul>
+            <li>Coordinate reference system is documented.</li>
+            <li>Units are clearly stated for distance-based analysis.</li>
+            <li>Service area and risk buffers are generated from named parameters.</li>
+            <li>Candidate site scoring uses traceable assumptions.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3>Data quality checks</h3>
+          <ul>
+            <li>Source and derived layers are separated.</li>
+            <li>Layer names are readable and purpose-driven.</li>
+            <li>Symbology supports interpretation without hiding risk factors.</li>
+            <li>Processing notes are complete enough for another analyst to reproduce.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <p class="eyebrow">How this maps to the survey tools</p>
+      <h2>Relevant QGIS patterns represented</h2>
+      <ul>
+        <li><strong>Layer management:</strong> source layers, derived layers, symbology, and output groups.</li>
+        <li><strong>Vector analysis:</strong> parcel review, point features, line features, and polygon overlays.</li>
+        <li><strong>Buffer analysis:</strong> service radius and risk buffer logic with documented distance units.</li>
+        <li><strong>Spatial decision support:</strong> proximity, risk, and need scoring for a candidate site.</li>
+        <li><strong>AI research workflow:</strong> structured metadata, reproducible steps, and reviewer-ready notes.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>Geospatial Analysis QGIS AI Research Demo · Stanley Chatman</p>
+  </footer>
+
+  <script>
+    const scenario = document.getElementById("scenario");
+    const radius = document.getElementById("radius");
+    const risk = document.getElementById("risk");
+    const transit = document.getElementById("transit");
+    const need = document.getElementById("need");
+
+    const radiusValue = document.getElementById("radiusValue");
+    const riskValue = document.getElementById("riskValue");
+    const transitValue = document.getElementById("transitValue");
+    const needValue = document.getElementById("needValue");
+
+    const mapTitle = document.getElementById("mapTitle");
+    const siteBuffer = document.getElementById("siteBuffer");
+    const riskBuffer = document.getElementById("riskBuffer");
+    const sitePoint = document.getElementById("sitePoint");
+    const siteLabel = document.getElementById("siteLabel");
+
+    const accessScore = document.getElementById("accessScore");
+    const riskScore = document.getElementById("riskScore");
+    const overallScore = document.getElementById("overallScore");
+    const gisCode = document.getElementById("gisCode");
+
+    const scenarioMap = {
+      clinic: {
+        title: "Community Clinic Access",
+        siteX: 380,
+        siteY: 215,
+        label: "candidate clinic",
+        objective: "Improve clinic access while avoiding risk buffers."
+      },
+      ev: {
+        title: "EV Charging Location",
+        siteX: 430,
+        siteY: 250,
+        label: "candidate charger",
+        objective: "Find a visible charging location near roads and transit."
+      },
+      park: {
+        title: "Neighborhood Park Planning",
+        siteX: 245,
+        siteY: 330,
+        label: "candidate park",
+        objective: "Prioritize neighborhood need and safe distance from risk areas."
+      },
+      retail: {
+        title: "Small Retail Site Review",
+        siteX: 330,
+        siteY: 155,
+        label: "candidate retail",
+        objective: "Balance road access, parcel fit, and risk exposure."
+      }
+    };
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function distance(x1, y1, x2, y2) {
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    function render() {
+      const selected = scenarioMap[scenario.value];
+      const serviceRadius = Number(radius.value);
+      const riskDistance = Number(risk.value);
+      const transitPriority = Number(transit.value);
+      const needWeight = Number(need.value);
+
+      radiusValue.textContent = serviceRadius;
+      riskValue.textContent = riskDistance;
+      transitValue.textContent = transitPriority;
+      needValue.textContent = needWeight;
+
+      mapTitle.textContent = selected.title;
+      sitePoint.setAttribute("cx", selected.siteX);
+      sitePoint.setAttribute("cy", selected.siteY);
+      siteLabel.setAttribute("x", selected.siteX + 18);
+      siteLabel.setAttribute("y", selected.siteY + 5);
+      siteLabel.textContent = selected.label;
+
+      const servicePixels = clamp(serviceRadius / 7, 42, 225);
+      const riskPixels = clamp(riskDistance / 4.2, 24, 170);
+      siteBuffer.setAttribute("cx", selected.siteX);
+      siteBuffer.setAttribute("cy", selected.siteY);
+      siteBuffer.setAttribute("r", servicePixels);
+      riskBuffer.setAttribute("r", riskPixels);
+
+      const distToTransitA = distance(selected.siteX, selected.siteY, 250, 130);
+      const distToTransitB = distance(selected.siteX, selected.siteY, 610, 92);
+      const nearestTransit = Math.min(distToTransitA, distToTransitB);
+      const distToRisk = distance(selected.siteX, selected.siteY, 560, 315);
+
+      const access = clamp(Math.round(100 - nearestTransit / 5 + transitPriority * 0.32 + serviceRadius / 55), 25, 98);
+      const riskComponent = clamp(Math.round((distToRisk - riskPixels) / 2 + 64), 20, 98);
+      const needComponent = clamp(Math.round(50 + needWeight * 0.45), 35, 98);
+      const overall = clamp(Math.round(access * 0.42 + riskComponent * 0.28 + needComponent * 0.30), 20, 98);
+
+      accessScore.textContent = access;
+      riskScore.textContent = riskComponent;
+      overallScore.textContent = overall;
+
+      gisCode.textContent = `PROJECT: QGIS-style geospatial analysis demo
+SCENARIO: ${selected.title}
+OBJECTIVE: ${selected.objective}
+
+COORDINATE REFERENCE SYSTEM:
+- CRS: EPSG:3857 demo view
+- Units: meters
+- Note: demo geometry is illustrative, not a surveyed dataset
+
+INPUT LAYERS:
+- parcels_demo.geojson
+- roads_demo.geojson
+- transit_points_demo.geojson
+- water_features_demo.geojson
+- risk_source_points_demo.geojson
+
+ANALYSIS PARAMETERS:
+- Service radius: ${serviceRadius} meters
+- Risk buffer: ${riskDistance} meters
+- Transit priority weight: ${transitPriority}%
+- Population need weight: ${needWeight}%
+
+PROCESSING STEPS:
+1. Load source vector layers.
+2. Validate CRS and distance units.
+3. Generate service area buffer around candidate site.
+4. Generate risk buffer around risk source.
+5. Score access based on transit proximity and service radius.
+6. Score risk based on distance from risk buffer.
+7. Combine access, risk, and need into overall suitability score.
+
+RESULTS:
+- Access score: ${access}
+- Risk score: ${riskComponent}
+- Overall suitability score: ${overall}
+
+QA STATUS:
+Ready for reviewer pass.`;
+    }
+
+    [scenario, radius, risk, transit, need].forEach((control) => {
+      control.addEventListener("input", render);
+      control.addEventListener("change", render);
+    });
+
+    document.getElementById("copyGis").addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(gisCode.textContent);
+        document.getElementById("copyGis").textContent = "Copied";
+        setTimeout(() => {
+          document.getElementById("copyGis").textContent = "Copy GIS notes";
+        }, 1400);
+      } catch (error) {
+        alert("Copy failed. You can still select the code manually.");
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>
