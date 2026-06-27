@@ -139,30 +139,26 @@ window.SITE = {
   ],
   "projects": [
     {
-      "name": "CAD and AEC AI Research Demo Samples",
-      "period": "2026",
-      "description": "Created a lightweight CAD and AEC demo portfolio to show how digital assets can be specified, structured, reviewed, and documented for AI research workflows. The samples demonstrate parametric modeling logic, 2D drafting organization, BIM and IFC review thinking, and constraint-based sketching using tool patterns similar to OpenSCAD, FreeCAD, LibreCAD, QCAD, SolveSpace, and BIM workflows.",
-      "tags": [
-        "CAD",
-        "AEC",
-        "AI Research",
-        "Parametric Modeling",
-        "BIM",
-        "IFC",
-        "2D Drafting",
-        "Constraint Sketching"
-      ],
-      "links": [
-        {
-          "label": "Portfolio",
-          "url": "https://stanchat.github.io/stanchatman-aboutme/"
-        },
-        {
-          "label": "GitHub",
-          "url": "https://github.com/stanchat"
-        }
-      ]
-    },
+  "name": "CAD and AEC AI Research Demo",
+  "period": "2026",
+  "description": "Built an interactive CAD/AEC demo showing a parameter-driven mounting bracket with live dimensions, generated OpenSCAD-style code, 2D drafting layer structure, and BIM/IFC-style review checks. The demo shows how a digital asset can be specified, adjusted, documented, and reviewed for AI research workflows.",
+  "tags": [
+    "CAD",
+    "AEC",
+    "OpenSCAD",
+    "Parametric Modeling",
+    "BIM",
+    "IFC",
+    "2D Drafting",
+    "Constraint Sketching"
+  ],
+  "links": [
+    {
+      "label": "Live Demo",
+      "url": "https://stanchat.github.io/stanchatman-aboutme/cad-aec-demo.html"
+    }
+  ]
+},
     {
       "name": "Brevid.app",
       "period": "Apr 2026 - Present",
