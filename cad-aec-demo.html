@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CAD and AEC AI Research Demo | Stanley Chatman</title>
+  <meta name="description" content="Interactive CAD/AEC demo showing a parameter-driven OpenSCAD-style bracket, 2D drafting view, and BIM/IFC review checklist." />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #5b6472;
+      --line: #e5e7eb;
+      --accent: #2563eb;
+      --accent-dark: #1d4ed8;
+      --soft: #eff6ff;
+      --code: #020617;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background: #f8fafc;
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--accent);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    header {
+      color: white;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(37, 99, 235, 0.48), transparent 30%),
+        linear-gradient(135deg, #020617 0%, #111827 58%, #1e293b 100%);
+      padding: 24px;
+    }
+
+    nav {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      font-weight: 850;
+      letter-spacing: 0.01em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: #dbeafe;
+    }
+
+    .hero {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 72px 0 86px;
+    }
+
+    .eyebrow {
+      color: #93c5fd;
+      font-size: 0.78rem;
+      font-weight: 850;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin: 0 0 10px;
+    }
+
+    h1 {
+      max-width: 930px;
+      font-size: clamp(2.2rem, 5vw, 4.7rem);
+      line-height: 1.02;
+      margin: 0;
+    }
+
+    .hero p.summary {
+      max-width: 780px;
+      color: #d1d5db;
+      font-size: 1.12rem;
+      margin: 24px 0 0;
+    }
+
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 54px 24px 90px;
+    }
+
+    section {
+      margin: 0 0 34px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 0.78fr 1.22fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .controls {
+      display: grid;
+      gap: 16px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      font-weight: 750;
+      color: #1f2937;
+    }
+
+    input[type="range"] {
+      width: 100%;
+    }
+
+    .value {
+      color: var(--accent-dark);
+      font-weight: 850;
+    }
+
+    .canvas-wrap {
+      background: var(--soft);
+      border: 1px solid #bfdbfe;
+      border-radius: 18px;
+      padding: 16px;
+      overflow: hidden;
+    }
+
+    svg {
+      width: 100%;
+      min-height: 360px;
+      display: block;
+    }
+
+    .part {
+      fill: #dbeafe;
+      stroke: #1d4ed8;
+      stroke-width: 3;
+    }
+
+    .cut {
+      fill: #f8fafc;
+      stroke: #1d4ed8;
+      stroke-width: 3;
+    }
+
+    .dim {
+      stroke: #0f172a;
+      stroke-width: 1.8;
+      marker-start: url(#arrow);
+      marker-end: url(#arrow);
+    }
+
+    .dim-line {
+      stroke: #64748b;
+      stroke-width: 1.3;
+      stroke-dasharray: 4 4;
+    }
+
+    .dim-text {
+      font-size: 13px;
+      font-weight: 800;
+      fill: #0f172a;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+    }
+
+    pre {
+      margin: 0;
+      background: var(--code);
+      color: #e5e7eb;
+      border-radius: 18px;
+      padding: 18px;
+      overflow-x: auto;
+      font-size: 0.93rem;
+      line-height: 1.55;
+    }
+
+    code {
+      font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: clamp(1.6rem, 3vw, 2.35rem);
+      line-height: 1.1;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    p {
+      color: var(--muted);
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .tag {
+      border: 1px solid var(--line);
+      background: white;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      font-weight: 750;
+    }
+
+    ul {
+      margin-bottom: 0;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    .note {
+      border-left: 5px solid var(--accent);
+      background: #f8fafc;
+      padding: 16px 18px;
+      border-radius: 14px;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    button, .button {
+      border: 0;
+      background: var(--accent);
+      color: white;
+      border-radius: 999px;
+      padding: 11px 15px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .button.secondary {
+      background: #e0e7ff;
+      color: #1e3a8a;
+    }
+
+    footer {
+      text-align: center;
+      color: #64748b;
+      padding: 22px 24px 52px;
+    }
+
+    @media (max-width: 860px) {
+      .grid,
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 52px 0 66px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="brand">Stanley Chatman</div>
+      <div class="nav-links">
+        <a href="./">Back to Portfolio</a>
+        <a href="https://github.com/stanchat">GitHub</a>
+        <a href="https://www.linkedin.com/in/stanchatman/">LinkedIn</a>
+      </div>
+    </nav>
+
+    <div class="hero">
+      <p class="eyebrow">CAD / AEC / AI Research Demo</p>
+      <h1>Interactive parametric CAD sample for digital asset review.</h1>
+      <p class="summary">
+        This demo shows how a simple CAD asset can be parameterized, previewed, documented,
+        and prepared for review in an AI-assisted CAD/AEC workflow. It combines OpenSCAD-style
+        parametric modeling, 2D drafting logic, and BIM/IFC-style quality checks.
+      </p>
+      <div class="tag-row">
+        <span class="tag">OpenSCAD-style parameters</span>
+        <span class="tag">2D drafting view</span>
+        <span class="tag">Constraint thinking</span>
+        <span class="tag">BIM / IFC review checklist</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="card">
+      <p class="eyebrow">Live CAD object</p>
+      <h2>Parametric mounting bracket</h2>
+      <p>
+        Adjust the dimensions below. The 2D preview and generated OpenSCAD-style script update
+        together, showing how a digital asset can be controlled by explicit parameters instead
+        of manual redrawing.
+      </p>
+
+      <div class="grid">
+        <div class="controls">
+          <label>
+            Width: <span class="value"><span id="widthValue">120</span> mm</span>
+            <input id="width" type="range" min="80" max="180" value="120" step="5" />
+          </label>
+
+          <label>
+            Height: <span class="value"><span id="heightValue">45</span> mm</span>
+            <input id="height" type="range" min="30" max="80" value="45" step="5" />
+          </label>
+
+          <label>
+            Thickness: <span class="value"><span id="thicknessValue">8</span> mm</span>
+            <input id="thickness" type="range" min="4" max="20" value="8" step="1" />
+          </label>
+
+          <label>
+            Hole diameter: <span class="value"><span id="holeValue">10</span> mm</span>
+            <input id="hole" type="range" min="6" max="22" value="10" step="1" />
+          </label>
+
+          <label>
+            Hole spacing: <span class="value"><span id="spacingValue">70</span> mm</span>
+            <input id="spacing" type="range" min="40" max="130" value="70" step="5" />
+          </label>
+
+          <div class="note">
+            Design intent: keep holes symmetric around the centerline, maintain edge clearance,
+            and generate a repeatable model from named parameters.
+          </div>
+        </div>
+
+        <div class="canvas-wrap">
+          <svg id="cadSvg" viewBox="0 0 720 420" role="img" aria-label="Parametric mounting bracket CAD preview">
+            <defs>
+              <marker id="arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+                <path d="M0,0 L8,4 L0,8 z" fill="#0f172a"></path>
+              </marker>
+            </defs>
+            <g id="drawing"></g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="two-col">
+      <div class="card">
+        <p class="eyebrow">Generated model script</p>
+        <h2>OpenSCAD-style output</h2>
+        <p>
+          This script represents the object as a repeatable model. A reviewer can change the
+          named parameters and regenerate the asset.
+        </p>
+        <pre><code id="scadCode"></code></pre>
+        <div class="button-row">
+          <button id="copyScad">Copy OpenSCAD script</button>
+          <a class="button secondary" href="#review">Review checklist</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="eyebrow">Drafting logic</p>
+        <h2>2D CAD layer plan</h2>
+        <p>
+          A simple CAD deliverable should be readable by people and machines. This layer structure
+          keeps geometry, dimensions, annotations, and construction guides separated.
+        </p>
+        <pre><code>Layer: PART-OUTLINE
+Layer: CUT-HOLES
+Layer: CENTERLINES
+Layer: DIMENSIONS
+Layer: ANNOTATIONS
+Layer: CONSTRUCTION</code></pre>
+      </div>
+    </section>
+
+    <section id="review" class="card">
+      <p class="eyebrow">Quality review</p>
+      <h2>BIM / IFC-style review thinking</h2>
+      <p>
+        Even though this sample is a small mechanical part, the same review mindset applies to
+        AEC models: digital assets should have clear classification, units, constraints, metadata,
+        and assumptions.
+      </p>
+
+      <div class="two-col">
+        <div>
+          <h3>Geometry checks</h3>
+          <ul>
+            <li>Named dimensions are visible and traceable.</li>
+            <li>Hole spacing is symmetric around the centerline.</li>
+            <li>Hole diameter does not exceed practical edge clearance.</li>
+            <li>Thickness is represented as a model parameter, not a hidden assumption.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3>Metadata checks</h3>
+          <ul>
+            <li>Object name: Parametric Mounting Bracket.</li>
+            <li>Units: millimeters.</li>
+            <li>Model class: mechanical support / mounting component.</li>
+            <li>Review status: demo asset for AI research portfolio.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <p class="eyebrow">How this maps to the survey tools</p>
+      <h2>Relevant tool patterns represented</h2>
+      <ul>
+        <li><strong>OpenSCAD / CadQuery:</strong> parameter-driven geometry and repeatable model generation.</li>
+        <li><strong>LibreCAD / QCAD:</strong> 2D drafting layers, annotations, dimensions, and drawing organization.</li>
+        <li><strong>FreeCAD / SolveSpace:</strong> constraint-based thinking and dimensional design intent.</li>
+        <li><strong>BIM / IFC:</strong> review checklist mindset for model classification, metadata, assumptions, and validation.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>CAD and AEC AI Research Demo · Stanley Chatman</p>
+  </footer>
+
+  <script>
+    const inputs = {
+      width: document.getElementById("width"),
+      height: document.getElementById("height"),
+      thickness: document.getElementById("thickness"),
+      hole: document.getElementById("hole"),
+      spacing: document.getElementById("spacing")
+    };
+
+    const labels = {
+      width: document.getElementById("widthValue"),
+      height: document.getElementById("heightValue"),
+      thickness: document.getElementById("thicknessValue"),
+      hole: document.getElementById("holeValue"),
+      spacing: document.getElementById("spacingValue")
+    };
+
+    const drawing = document.getElementById("drawing");
+    const scadCode = document.getElementById("scadCode");
+
+    function getParams() {
+      return {
+        width: Number(inputs.width.value),
+        height: Number(inputs.height.value),
+        thickness: Number(inputs.thickness.value),
+        hole: Number(inputs.hole.value),
+        spacing: Number(inputs.spacing.value)
+      };
+    }
+
+    function svgEl(name, attrs = {}) {
+      const el = document.createElementNS("http://www.w3.org/2000/svg", name);
+      for (const [key, value] of Object.entries(attrs)) {
+        el.setAttribute(key, value);
+      }
+      return el;
+    }
+
+    function addText(x, y, value, anchor = "middle") {
+      const text = svgEl("text", {
+        x,
+        y,
+        "text-anchor": anchor,
+        class: "dim-text"
+      });
+      text.textContent = value;
+      drawing.appendChild(text);
+    }
+
+    function render() {
+      const p = getParams();
+
+      Object.keys(labels).forEach((key) => {
+        labels[key].textContent = p[key];
+      });
+
+      const scale = Math.min(3.4, 430 / p.width, 180 / p.height);
+      const w = p.width * scale;
+      const h = p.height * scale;
+      const holeR = (p.hole * scale) / 2;
+      const spacing = p.spacing * scale;
+
+      const cx = 360;
+      const cy = 190;
+      const x = cx - w / 2;
+      const y = cy - h / 2;
+      const radius = Math.min(18, h / 5);
+
+      drawing.innerHTML = "";
+
+      const bracket = svgEl("rect", {
+        x,
+        y,
+        width: w,
+        height: h,
+        rx: radius,
+        class: "part"
+      });
+      drawing.appendChild(bracket);
+
+      const leftHole = svgEl("circle", {
+        cx: cx - spacing / 2,
+        cy,
+        r: holeR,
+        class: "cut"
+      });
+      const rightHole = svgEl("circle", {
+        cx: cx + spacing / 2,
+        cy,
+        r: holeR,
+        class: "cut"
+      });
+      drawing.appendChild(leftHole);
+      drawing.appendChild(rightHole);
+
+      drawing.appendChild(svgEl("line", {
+        x1: cx,
+        y1: y - 34,
+        x2: cx,
+        y2: y + h + 34,
+        class: "dim-line"
+      }));
+
+      drawing.appendChild(svgEl("line", {
+        x1: x,
+        y1: y + h + 44,
+        x2: x + w,
+        y2: y + h + 44,
+        class: "dim"
+      }));
+      addText(cx, y + h + 66, `width ${p.width} mm`);
+
+      drawing.appendChild(svgEl("line", {
+        x1: x - 42,
+        y1: y,
+        x2: x - 42,
+        y2: y + h,
+        class: "dim"
+      }));
+      addText(x - 58, cy + 4, `height ${p.height} mm`, "end");
+
+      drawing.appendChild(svgEl("line", {
+        x1: cx - spacing / 2,
+        y1: y - 38,
+        x2: cx + spacing / 2,
+        y2: y - 38,
+        class: "dim"
+      }));
+      addText(cx, y - 48, `hole spacing ${p.spacing} mm`);
+
+      addText(cx - spacing / 2, cy + holeR + 26, `Ø${p.hole}`);
+      addText(cx + spacing / 2, cy + holeR + 26, `Ø${p.hole}`);
+
+      scadCode.textContent = `// Parametric mounting bracket demo
+// Units: millimeters
+
+width = ${p.width};
+height = ${p.height};
+thickness = ${p.thickness};
+hole_diameter = ${p.hole};
+hole_spacing = ${p.spacing};
+
+module mounting_bracket() {
+  difference() {
+    cube([width, height, thickness], center = true);
+
+    translate([-hole_spacing / 2, 0, 0])
+      cylinder(h = thickness + 2, d = hole_diameter, center = true, $fn = 64);
+
+    translate([hole_spacing / 2, 0, 0])
+      cylinder(h = thickness + 2, d = hole_diameter, center = true, $fn = 64);
+  }
+}
+
+mounting_bracket();`;
+    }
+
+    Object.values(inputs).forEach((input) => {
+      input.addEventListener("input", render);
+    });
+
+    document.getElementById("copyScad").addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(scadCode.textContent);
+        document.getElementById("copyScad").textContent = "Copied";
+        setTimeout(() => {
+          document.getElementById("copyScad").textContent = "Copy OpenSCAD script";
+        }, 1400);
+      } catch (error) {
+        alert("Copy failed. You can still select the code manually.");
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>
