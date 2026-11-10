@@ -1,10 +1,10 @@
 window.SITE = {
   "person": {
     "name": "Stanley Chatman",
-    "headline": "AI Enablement Leader | Principal Technical Program Manager | GenAI Adoption & Operating Models | Enterprise Delivery",
+    "headline": "Principal AI Program Leader | AI Enablement | Solution Architecture | Responsible AI",
     "location": "Chicago Area",
-    "summaryBlurb": "I lead enterprise AI enablement programs that turn GenAI pilots into production through operating models, training, governance, and workflow integration across engineering, product, and business teams.",
-    "aboutSummary": "Principal-level technical program leader specializing in AI enablement and GenAI adoption at scale. Proven at building enterprise playbooks, champion networks, and delivery models that convert experimentation into durable business value. Background spans global Agile transformation, platform execution, and AI-native product delivery.",
+    "summaryBlurb": "I lead strategic AI programs at NiCE and help organizations move from promising AI ideas to scalable, governed solutions with measurable customer and business value.",
+    "aboutSummary": "I am a principal AI program leader, solution architect, published researcher, and educator with more than 20 years of experience delivering enterprise technology transformation. My work spans agentic AI, RAG, cloud architecture, AI-assisted engineering, responsible adoption, and executive program leadership. I am especially interested in the operating models, governance, and human-centered enablement required to turn emerging capabilities into durable outcomes.",
     "links": {
       "linkedin": "https://www.linkedin.com/in/stanchatman/",
       "aboutMe": "https://about.me/stanleychatman",
@@ -14,32 +14,32 @@ window.SITE = {
     "profileImage": "./assets/stanchatman-profilepic.jpg",
     "topSkills": [
       "AI Enablement",
-      "GenAI Adoption",
-      "Operating Models",
+      "Agentic AI & RAG",
+      "Solution Architecture",
       "Program Leadership",
-      "Responsible AI / Governance"
+      "Responsible AI"
     ]
   },
   "stats": [
     {
-      "value": "Deloitte",
-      "label": "AI Enablement Lead"
+      "value": "NiCE",
+      "label": "Principal AI leadership"
     },
     {
-      "value": "GenAI to Prod",
-      "label": "RAG + agent workflows"
+      "value": "2 papers",
+      "label": "Published AI research"
     },
     {
       "value": "20+ yrs",
       "label": "Enterprise delivery"
     }
   ],
-  "nowLine": "Targeting senior AI program leadership roles focused on GenAI enablement, enterprise adoption, and operating-model transformation.",
+  "nowLine": "Leading strategic AI programs at NiCE while building CommunityInsight.AI, teaching applied computer science, and publishing practical research on governed enterprise AI adoption.",
   "focusAreas": [
-    "Enterprise AI enablement programs: training, champions, adoption metrics",
-    "GenAI delivery: RAG systems and agentic assistants in production",
-    "Responsible AI governance and risk controls",
-    "Agile operating models for AI portfolio execution"
+    "Enterprise AI strategy, portfolio delivery, and value realization",
+    "Agentic AI, RAG systems, and production-ready solution architecture",
+    "Responsible AI governance, human oversight, and risk controls",
+    "AI enablement, operating models, adoption metrics, and change leadership"
   ],
   "volunteering": [
     {
@@ -57,30 +57,52 @@ window.SITE = {
   ],
   "experience": [
     {
-      "company": "Atmosera",
-      "title": "Collaborative Engineer, GitHub Copilot",
-      "dates": "Jan 2026 - Present",
+      "company": "NiCE",
+      "title": "Principal AI Project Manager, CX",
+      "dates": "Jul 2026 - Present",
       "location": "United States",
       "bullets": [
-        "Currently serving as a Collaborative Engineer at Atmosera, where I help enterprise engineering teams turn AI investment into measurable ROI through the GitHub Copilot Adoption Framework (GCAF). I specialize in de-fearing AI for developers and teaching them to act as orchestrators of autonomous agents. My work focuses on high-velocity enablement sprints, leveraging MCP-powered tools and agentic workflows to modernize legacy systems and increase developer satisfaction across the SDLC.",
-        "Implement the GitHub Copilot Adoption Framework (GCAF): Lead high-touch white-glove enablement for enterprise clients, moving teams from basic autocomplete to advanced AI-assisted development.",
-        "Facilitate scalable enablement sprints: Design and deliver intensive two-week training sprints for cohorts of up to 50 engineers, including custom workshops, live coding sessions, and daily technical office hours.",
-        "Master agentic workflows: Mentor developers on advanced Copilot features, including Agent Mode for multi-file reasoning, Copilot Workspace for implementation planning, and the Copilot CLI for DevOps automation.",
-        "Standardize enterprise AI governance: Leverage custom instructions and Model Context Protocol (MCP) servers to enforce organization-wide coding standards, ensuring consistency across complex repositories.",
-        "Quantify productivity via SPACE/DORA: Measure the downstream impact of AI adoption using the SPACE framework and DORA metrics, focusing on qualitative gains like developer flow and quantitative gains in velocity and quality.",
-        "Bridge the onboarding gap: Utilize repository reasoning and dependency mapping to accelerate the time-to-value for engineers navigating large-scale legacy codebases."
+        "Lead strategic AI programs that advance customer experience, enterprise adoption, and measurable business outcomes across product, engineering, governance, and customer-facing teams.",
+        "Drive initiatives from discovery through roadmap definition, delivery, adoption, and value realization while managing dependencies, risks, operating cadences, metrics, and executive reporting.",
+        "Translate emerging AI and agentic capabilities into scalable CX solutions with clear ownership, human oversight, responsible AI controls, and production-readiness criteria.",
+        "Align cross-functional stakeholders around use-case priorities, delivery decisions, adoption plans, and evidence-based measures of customer and business value."
+      ],
+      "links": []
+    },
+    {
+      "company": "geniant",
+      "title": "Solution Architect, AI (Contract)",
+      "dates": "Aug 2026 - Sep 2026",
+      "location": "Remote",
+      "bullets": [
+        "Led technical discovery and solution architecture for modernization of APA Medical's DME ordering and fulfillment platform, translating stakeholder research into a four-phase product and technology roadmap.",
+        "Assessed the Azure SQL warehouse, HubSpot solution, Brightree integrations, API contracts, and prior implementation artifacts; validated sandbox capabilities through a focused API test harness.",
+        "Designed the future-state Azure reference architecture, integration strategy, delivery sequencing, staffing model, and build-versus-buy recommendations with HIPAA, feasibility, TCO, and ROI considerations.",
+        "Partnered with research, product, engineering, and executive stakeholders to prioritize order-status transparency, resupply automation, payer authorization processing, digital order creation, and AI-enabled workflow opportunities."
+      ],
+      "links": []
+    },
+    {
+      "company": "Atmosera",
+      "title": "Collaborative Engineer, GitHub Copilot",
+      "dates": "Feb 2026 - Aug 2026",
+      "location": "United States",
+      "bullets": [
+        "Led enterprise GitHub Copilot enablement through high-touch adoption sprints, workshops, live coding, office hours, playbooks, and executive readouts for engineering cohorts of up to 50 participants.",
+        "Coached developers on agent mode, repository reasoning, custom instructions, MCP-enabled workflows, AI-assisted testing, legacy modernization, secure SDLC practices, and human review.",
+        "Measured adoption and engineering impact through SPACE/DORA-aligned indicators, qualitative feedback, workflow evidence, and recommendations for sustained behavior change."
       ],
       "links": []
     },
     {
       "company": "Deloitte",
       "title": "AI Enablement Lead",
-      "dates": "Sep 2025 - Feb 2026",
+      "dates": "Sep 2025 - Mar 2026",
       "location": "United States",
       "bullets": [
-        "Leading enterprise-scale GenAI enablement programs spanning training, operating models, governance, and adoption measurement.",
-        "Partnering with engineering, product, and business leaders to convert pilots into durable production workflows.",
-        "Designing repeatable AI delivery playbooks across multi-client portfolios."
+        "Designed an enterprise AI adoption and governance roadmap covering use-case intake, decision gates, enablement rhythms, feedback loops, success metrics, and responsible AI controls in a regulated healthcare environment.",
+        "Facilitated discovery across product, engineering, QA, operations, delivery, and leadership teams to convert workflow pain points into prioritized AI use cases, implementation requirements, and Jira backlogs.",
+        "Established ideathon and hackathon pathways with mentor support, judging criteria, prototype environments, governance guardrails, and prototype-to-production handoffs."
       ],
       "links": []
     },
@@ -90,15 +112,15 @@ window.SITE = {
       "dates": "Jan 2021 - Dec 2024",
       "location": "Chicago, IL",
       "bullets": [
-        "Served as Generative AI Champion driving enablement, tooling guidance, and cross-org adoption.",
-        "Led complex technical programs across Industry Solutions Engineering.",
-        "Aligned engineering, legal, and business teams around responsible AI delivery."
+        "Led enterprise AI, cloud, data, DevOps, and platform programs from discovery through delivery, aligning executives, engineering, product, security, privacy, compliance, partner, and customer stakeholders.",
+        "Delivered the UBS WMPC Smart Assistant, a regulated financial-services GenAI/RAG solution using Azure OpenAI and Azure AI Search with grounding, identity controls, quality expectations, and adoption measures.",
+        "Served as an enterprise OpenAI and Generative AI Champion."
       ],
       "links": []
     },
     {
       "company": "Avanade",
-      "title": "Senior Group Manager / Global Agile Lead / Agile Coach",
+      "title": "Senior Group Manager / Senior Solution Architect / Global Agile Lead",
       "dates": "Sep 2007 - Jan 2021",
       "location": "Greater Chicago Area",
       "bullets": [
@@ -121,7 +143,7 @@ window.SITE = {
     },
     {
       "company": "CommunityInsight.AI",
-      "title": "Founder (Selected AI Product Initiative)",
+      "title": "Founder and CEO",
       "dates": "Dec 2025 - Present",
       "location": "Chicago, IL",
       "bullets": [
@@ -254,6 +276,38 @@ window.SITE = {
     }
   ],
   "writing": {
+    "research": [
+      {
+        "title": "AI Center of Excellence and AI Studio: A 70-20-10 Operating Model for Governed Enterprise AI Adoption",
+        "date": "STAR Journal of Data Science and Applied Analytics, Vol. 1, Issue 1, 2026",
+        "summary": "Presents a complementary AI Center of Excellence and AI Studio operating model, including a 70-20-10 portfolio rule for balancing enterprise scale, structured experimentation, and exploration.",
+        "links": [
+          {
+            "label": "Article & Abstract",
+            "url": "https://lnkd.in/gyyj5YaW"
+          },
+          {
+            "label": "Download PDF",
+            "url": "https://lnkd.in/gaS9ZnSs"
+          }
+        ]
+      },
+      {
+        "title": "AI Enablement Coaching: A Measurement Framework for Driving Measurable AI Adoption",
+        "date": "STAR Journal of Data Science and Applied Analytics, Vol. 1, Issue 1, 2026",
+        "summary": "Introduces the AI Enablement Coach role and an Evidence-Based Management-aligned framework for measuring adoption, learning velocity, stakeholder trust, responsible use, and value realization.",
+        "links": [
+          {
+            "label": "Article & Abstract",
+            "url": "https://lnkd.in/gBf7BtJv"
+          },
+          {
+            "label": "Download PDF",
+            "url": "https://lnkd.in/gW4BZKyC"
+          }
+        ]
+      }
+    ],
     "medium": [
       {
         "title": "When One Prompt Becomes a Song: How Copilot Outperformed Every Other AI Tool",
@@ -301,9 +355,24 @@ window.SITE = {
         "title": "Stanley Chatman - Scrum.org Blog Archive",
         "date": "",
         "url": "https://www.scrum.org/resources/blog?uid=118&resource_tags=All&node_content_language=All"
+      },
+      {
+        "title": "Stanley Chatman - Medium",
+        "date": "",
+        "url": "https://medium.com/@stanchatman"
       }
     ],
     "other": [
+      {
+        "title": "STAR Journal of Data Science and Applied Analytics - Volume 1, Issue 1",
+        "meta": "Full journal issue",
+        "url": "https://lnkd.in/ghBP4Bxs"
+      },
+      {
+        "title": "Stanley Chatman - Google Scholar",
+        "meta": "Research indexing",
+        "url": "https://lnkd.in/gXQ5Cf9G"
+      },
       {
         "title": "From Chaos to Confidence: Why I Built the AI Engagement Accelerator Kit",
         "meta": "Dev.to",

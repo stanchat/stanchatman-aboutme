@@ -183,20 +183,34 @@
       const m = el("div", "listItem__meta");
       m.textContent = includeMeta ? `${i.date || ""}` : `${i.date || i.meta || ""}`.trim();
 
-      const a = el("a", "listItem__link link");
-      a.href = i.url;
-      a.target = "_blank";
-      a.rel = "noreferrer";
-      a.textContent = "Open";
-
       row.appendChild(t);
       if (m.textContent) row.appendChild(m);
-      row.appendChild(a);
+
+      if (i.summary) {
+        const summary = el("p", "projectCard__desc");
+        summary.textContent = i.summary;
+        row.appendChild(summary);
+      }
+
+      const itemLinks = i.links || (i.url ? [{ label: "Open", url: i.url }] : []);
+      if (itemLinks.length) {
+        const links = el("div", "projectCard__links");
+        itemLinks.forEach((lk) => {
+          const a = el("a", "listItem__link link");
+          a.href = lk.url;
+          a.target = "_blank";
+          a.rel = "noreferrer";
+          a.textContent = lk.label;
+          links.appendChild(a);
+        });
+        row.appendChild(links);
+      }
 
       wrap.appendChild(row);
     });
   };
 
+  makeList(SITE.writing.research, "#researchList");
   makeList(SITE.writing.medium, "#mediumList");
   makeList(SITE.writing.scrumOrg, "#scrumBlogList");
   makeList(SITE.writing.other, "#otherWriting");
