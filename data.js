@@ -83,6 +83,24 @@ window.SITE = {
       "links": []
     },
     {
+      "company": "Handshake AI",
+      "title": "AI Evaluation Specialist, Prompt Designer & Quality Reviewer (Contract)",
+      "dates": "2026",
+      "location": "Remote",
+      "bullets": [
+        "Designed professional, multi-file benchmarks evaluating AI agents' instruction following, domain reasoning, technical execution, visual judgment, and deliverable quality.",
+        "Created weighted rubrics covering source grounding, requirement compliance, technical accuracy, visual quality, artifact usability, and hallucination resistance.",
+        "Audited AI-generated documents, spreadsheets, PDFs, formulas, citations, creative assets, animations, and editable source files for accuracy and completeness.",
+        "Used Python and PowerShell to validate file integrity, formulas, exports, evidence packages, and reproducibility while producing evidence-based approval and revision recommendations."
+      ],
+      "links": [
+        {
+          "label": "Handshake AI",
+          "url": "https://ai.joinhandshake.com/"
+        }
+      ]
+    },
+    {
       "company": "Atmosera",
       "title": "Collaborative Engineer, GitHub Copilot",
       "dates": "Feb 2026 - Aug 2026",
@@ -160,6 +178,25 @@ window.SITE = {
     }
   ],
   "projects": [
+    {
+      "name": "AI Benchmark Design and Quality Evaluation",
+      "period": "2026",
+      "description": "Designed complex, professional benchmarks and weighted rubrics for evaluating AI agents across instruction following, domain reasoning, technical execution, visual judgment, source grounding, and deliverable usability. Reviewed documents, spreadsheets, formulas, PDFs, creative assets, animations, and editable source files, using Python and PowerShell to strengthen evidence capture, reproducibility, and artifact validation. Public description is intentionally sanitized to protect restricted benchmark materials.",
+      "tags": [
+        "AI Evaluation",
+        "Prompt Design",
+        "Rubric Engineering",
+        "Quality Assurance",
+        "Python",
+        "PowerShell"
+      ],
+      "links": [
+        {
+          "label": "Handshake AI",
+          "url": "https://ai.joinhandshake.com/"
+        }
+      ]
+    },
     {
   "name": "CAD and AEC AI Research Demo",
   "period": "2026",
